@@ -42,7 +42,7 @@ export default function ProductsPage({ clientId, toast }) {
 
   if (selected === '__new__' || (selected && selected !== null)) {
     const product = selected === '__new__'
-      ? { name: '', price_cents: null, product_type: 'one_time', is_active: true, image_url: null, description: '', contents: [] }
+      ? { name: '', price_cents: null, product_type: 'one_time', is_active: true, image_url: null, description: '', contents: [], gratuity_pct: null }
       : products.find((p) => p.id === selected);
     return (
       <ProductEditor
@@ -204,6 +204,12 @@ function ProductEditor({ product, onBack, onSave, toast }) {
                     style={{ width: '100%', height: 40, border: `1px solid ${hairlineStrong}`, borderRadius: 'var(--r)', background: 'var(--paper)', padding: '0 12px', fontSize: 14, color: ink, outline: 'none' }} />
                 </Field>
               </div>
+              <Field label="Gratuity / tip %" hint="Optional — shown to staff during redemption">
+                <input type="number" step="1" min="0" max="100" placeholder="e.g. 18"
+                  value={draft.gratuity_pct != null ? draft.gratuity_pct : ''}
+                  onChange={(e) => update({ gratuity_pct: e.target.value !== '' ? parseInt(e.target.value, 10) : null })}
+                  style={{ width: '100%', height: 40, border: `1px solid ${hairlineStrong}`, borderRadius: 'var(--r)', background: 'var(--paper)', padding: '0 12px', fontSize: 14, color: ink, outline: 'none' }} />
+              </Field>
               <Field label="Status">
                 <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: 14, color: ink }}>
                   <input type="checkbox" checked={draft.is_active} onChange={(e) => update({ is_active: e.target.checked })}

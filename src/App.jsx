@@ -103,7 +103,7 @@ export default function App() {
       >
         {page === 'overview' && <OverviewPage clientId={clientId} clientName={activeClient?.name} pendingCount={pendingCount} setPage={setPage} />}
         {page === 'sales' && <SalesPage clientId={clientId} toast={toast} />}
-        {page === 'redeem' && <RedeemPage clientId={clientId} toast={toast} />}
+        {page === 'redeem' && <RedeemPage clientId={clientId} toast={toast} user={user} />}
         {page === 'products' && <ProductsPage clientId={clientId} toast={toast} />}
         {page === 'customers' && <CustomersPage clientId={clientId} toast={toast} />}
         {page === 'emails' && <EmailsPage clientId={clientId} toast={toast} />}

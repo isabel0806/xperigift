@@ -2,7 +2,7 @@ import Icon from './Icon';
 import LogoMark from './LogoMark';
 import { paper, paperSoft, ink, inkSoft, inkMuted, hairline, hairlineStrong, emerald } from '../lib/tokens';
 
-const NAV = [
+const NAV_ALL = [
   { id: 'overview', label: 'Overview', icon: 'grid' },
   { id: 'sales', label: 'Sales', icon: 'bar-chart' },
   { id: 'redeem', label: 'Redeem', icon: 'scan' },
@@ -12,6 +12,10 @@ const NAV = [
   { id: 'templates', label: 'Templates', icon: 'file-text' },
 ];
 
+const NAV_STAFF = [
+  { id: 'redeem', label: 'Redeem', icon: 'scan' },
+];
+
 const NAV_ADMIN = [
   { id: 'admin-clients', label: 'Clients', icon: 'building' },
   { id: 'admin-bookings', label: 'Audit bookings', icon: 'settings' },
@@ -19,6 +23,8 @@ const NAV_ADMIN = [
 
 export default function DashLayout({ user, profile, clients, clientId, setClientId, page, setPage, onLogout, pendingCount, children }) {
   const isAdmin = profile?.role === 'admin';
+  const isStaff = !isAdmin && profile?.client_role === 'staff';
+  const NAV = isStaff ? NAV_STAFF : NAV_ALL;
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: paperSoft }}>
