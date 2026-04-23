@@ -1,8 +1,11 @@
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { SiteShell } from '../../components/landing/SiteShell';
 import { Eyebrow } from '../../components/landing/Eyebrow';
 
 export default function BookAuditPage() {
+  const navigate = useNavigate();
+
   useEffect(() => {
     const script = document.createElement('script');
     script.src = 'https://assets.calendly.com/assets/external/widget.js';
@@ -10,6 +13,16 @@ export default function BookAuditPage() {
     document.body.appendChild(script);
     return () => { document.body.removeChild(script); };
   }, []);
+
+  useEffect(() => {
+    const handleMessage = (e) => {
+      if (e.data?.event === 'calendly.event_scheduled') {
+        navigate('/thank-you');
+      }
+    };
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, [navigate]);
 
   return (
     <SiteShell>
