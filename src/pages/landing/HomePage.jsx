@@ -1,6 +1,7 @@
 import { SiteShell } from '../../components/landing/SiteShell';
 import { CTALink } from '../../components/landing/CTALink';
 import { Eyebrow } from '../../components/landing/Eyebrow';
+import { HeroDashboard } from '../../components/landing/HeroDashboard';
 import {
   TrendingUp, Clock, BarChart3, Megaphone,
   ClipboardList, FileText, Rocket,
@@ -60,17 +61,22 @@ export default function HomePage() {
 
       {/* ── Hero ── */}
       <section className="border-b border-hairline">
-        <div className="mx-auto max-w-[1100px] px-6 sm:px-10 pt-20 sm:pt-28 pb-16 sm:pb-24">
-          <Eyebrow>Gift card revenue management</Eyebrow>
-          <h1 className="mt-5 font-display text-[42px] sm:text-[60px] lg:text-[72px] leading-[1.02] text-xg-bordo max-w-[720px]">
-            Your gift cards should be earning more.
-          </h1>
-          <p className="mt-6 max-w-[500px] text-[17px] text-ink-soft leading-relaxed">
-            Xperigift manages your entire gift card revenue channel — strategy, campaigns, and reporting — so you don't have to.
-          </p>
-          <div className="mt-9 flex flex-wrap gap-3">
-            <CTALink to="/book-audit" size="lg">Book a free audit</CTALink>
-            <CTALink to="/how-it-works" variant="outline" size="lg">See how it works</CTALink>
+        <div className="mx-auto max-w-[1100px] px-6 sm:px-10 pt-20 sm:pt-28 pb-16 sm:pb-24 grid grid-cols-1 lg:grid-cols-2 items-center gap-16">
+          <div>
+            <Eyebrow>Gift card revenue management</Eyebrow>
+            <h1 className="mt-5 font-display text-[42px] sm:text-[60px] lg:text-[64px] leading-[1.02] text-xg-bordo">
+              Your gift cards should be earning more.
+            </h1>
+            <p className="mt-6 max-w-[500px] text-[17px] text-ink-soft leading-relaxed">
+              Xperigift manages your entire gift card revenue channel — strategy, campaigns, and reporting — so you don't have to.
+            </p>
+            <div className="mt-9 flex flex-wrap gap-3">
+              <CTALink to="/book-audit" size="lg">Book a free audit</CTALink>
+              <CTALink to="/how-it-works" variant="outline" size="lg">See how it works</CTALink>
+            </div>
+          </div>
+          <div className="relative hidden lg:block">
+            <HeroDashboard />
           </div>
         </div>
       </section>
