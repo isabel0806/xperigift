@@ -104,7 +104,7 @@ export default function AboutPage() {
             Thirty minutes. No deck. Just a working conversation about your business and what's possible.
           </p>
           <div className="mt-9 flex justify-center">
-            <CTALink to="/book-audit" size="lg" className="bg-emerald hover:bg-emerald-deep text-paper">
+            <CTALink to="https://calendly.com/isabel-thegiftcardcafe/30min" size="lg" className="bg-emerald hover:bg-emerald-deep text-paper">
               Book your free audit
             </CTALink>
           </div>

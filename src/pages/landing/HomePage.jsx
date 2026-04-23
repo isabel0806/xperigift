@@ -69,7 +69,7 @@ export default function HomePage() {
             Xperigift manages your entire gift card revenue channel — strategy, campaigns, and reporting — so you don't have to.
           </p>
           <div className="mt-9 flex flex-wrap gap-3">
-            <CTALink to="/book-audit" size="lg">Book a free audit</CTALink>
+            <CTALink to="https://calendly.com/isabel-thegiftcardcafe/30min" size="lg">Book a free audit</CTALink>
             <CTALink to="/how-it-works" variant="outline" size="lg">See how it works</CTALink>
           </div>
         </div>
@@ -298,7 +298,7 @@ export default function HomePage() {
             Thirty minutes. No pitch. Two to three specific revenue opportunities you can act on immediately.
           </p>
           <div className="mt-9 flex flex-wrap gap-3 justify-center">
-            <CTALink to="/book-audit" size="lg" className="bg-emerald hover:bg-emerald-deep text-paper">
+            <CTALink to="https://calendly.com/isabel-thegiftcardcafe/30min" size="lg" className="bg-emerald hover:bg-emerald-deep text-paper">
               Book your free audit
             </CTALink>
           </div>

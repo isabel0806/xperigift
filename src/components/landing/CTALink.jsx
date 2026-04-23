@@ -13,10 +13,20 @@ export function CTALink({ to, children, size = 'md', variant = 'solid', withArro
     ghost: 'text-ink-soft hover:text-ink',
   };
 
+  const cls = `${base} ${sizes[size]} ${variants[variant]} ${className}`;
+  const arrow = withArrow && variant !== 'ghost' ? <ArrowRight className="h-4 w-4" /> : null;
+
+  if (to.startsWith('http')) {
+    return (
+      <a href={to} target="_blank" rel="noopener noreferrer" className={cls}>
+        {children}{arrow}
+      </a>
+    );
+  }
+
   return (
-    <Link to={to} className={`${base} ${sizes[size]} ${variants[variant]} ${className}`}>
-      {children}
-      {withArrow && variant !== 'ghost' && <ArrowRight className="h-4 w-4" />}
+    <Link to={to} className={cls}>
+      {children}{arrow}
     </Link>
   );
 }

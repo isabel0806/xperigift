@@ -47,12 +47,13 @@ export function SiteFooter() {
               30-minute Gift Card Revenue Audit. No pitch — you'll leave with two
               to three specific revenue opportunities.
             </p>
-            <Link
-              to="/book-audit"
+            <a
+              href="https://calendly.com/isabel-thegiftcardcafe/30min"
+              target="_blank" rel="noopener noreferrer"
               className="mt-5 inline-flex h-10 items-center rounded-sm bg-ink px-5 text-[14px] font-medium text-paper hover:bg-ink-soft"
             >
               Book your audit
-            </Link>
+            </a>
           </div>
         </div>
 
