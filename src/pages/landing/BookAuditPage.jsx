@@ -71,7 +71,7 @@ export default function BookAuditPage() {
   return (
     <SiteShell>
       <section className="border-b border-hairline">
-        <div className="mx-auto max-w-[1200px] px-5 sm:px-8 pt-20 sm:pt-28 pb-12">
+        <div className="mx-auto max-w-[1200px] px-6 sm:px-10 pt-20 sm:pt-28 pb-12">
           <div className="max-w-[640px]">
             <Eyebrow>Free audit</Eyebrow>
             <h1 className="mt-6 font-display text-[44px] sm:text-[60px] leading-[1] text-ink">
@@ -85,7 +85,7 @@ export default function BookAuditPage() {
       </section>
 
       <section className="border-b border-hairline">
-        <div className="mx-auto max-w-[760px] px-5 sm:px-8 py-16 sm:py-20">
+        <div className="mx-auto max-w-[760px] px-6 sm:px-10 py-16 sm:py-20">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid gap-5 sm:grid-cols-2">
               <div>

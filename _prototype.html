@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Xperigift — Client Login UX Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --paper:oklch(0.985 0.005 85);
+  --paper-soft:oklch(0.97 0.006 85);
+  --ink:oklch(0.18 0.01 270);
+  --ink-soft:oklch(0.32 0.01 270);
+  --ink-muted:oklch(0.5 0.008 270);
+  --emerald:oklch(0.42 0.09 165);
+  --emerald-deep:oklch(0.32 0.075 165);
+  --emerald-soft:oklch(0.95 0.025 165);
+  --hairline:oklch(0.91 0.005 270);
+  --hairline-strong:oklch(0.83 0.005 270);
+  --sky:oklch(0.97 0.025 230);
+  --sky-border:oklch(0.78 0.07 230);
+  --sky-text:oklch(0.3 0.1 240);
+  --amber:oklch(0.97 0.04 75);
+  --amber-border:oklch(0.78 0.13 75);
+  --amber-text:oklch(0.3 0.1 55);
+}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-feature-settings:"ss01","cv11"}
+h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif;letter-spacing:-0.02em}
+input,select,button,textarea{font-family:inherit}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--hairline-strong);border-radius:3px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideRight{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+@keyframes scaleIn{from{opacity:0;transform:scale(0.96)}to{opacity:1;transform:scale(1)}}
+.fade-up{animation:fadeUp 0.3s ease-out both}
+.slide-right{animation:slideRight 0.25s ease-out both}
+.scale-in{animation:scaleIn 0.2s ease-out both}
+.spin{animation:spin 0.8s linear infinite}
+textarea{resize:none}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useEffect,useCallback,useRef,useMemo} = React;
+
+/* ── TOKENS ─────────────────────────────────────────────── */
+const paper='var(--paper)',paperSoft='var(--paper-soft)',ink='var(--ink)',inkSoft='var(--ink-soft)',
+  inkMuted='var(--ink-muted)',emerald='var(--emerald)',emeraldDeep='var(--emerald-deep)',
+  emeraldSoft='var(--emerald-soft)',hairline='var(--hairline)',hairlineStrong='var(--hairline-strong)';
+const R='0.25rem';
+
+/* ── MOCK DATA ──────────────────────────────────────────── */
+const CLIENTS=[{id:'cl1',name:'Serenity Day Spa'},{id:'cl2',name:'The Fork & Barrel'}];
+
+const SALES=[
+  {id:'s1',sold_at:'2026-04-18T14:22:00Z',product_name:'60-min Massage',amount_cents:9500,redeemed_cents:0,status:'sold',buyer_name:'Emily Carter',card_code:'XG-4821'},
+  {id:'s2',sold_at:'2026-04-15T10:05:00Z',product_name:'Spa Day Package',amount_cents:22000,redeemed_cents:22000,status:'redeemed',buyer_name:'James Wu',card_code:'XG-3310'},
+  {id:'s3',sold_at:'2026-04-12T16:45:00Z',product_name:'60-min Massage',amount_cents:9500,redeemed_cents:5000,status:'partially_redeemed',buyer_name:'Sarah M.',card_code:'XG-2291'},
+  {id:'s4',sold_at:'2026-04-10T09:30:00Z',product_name:'Open Amount',amount_cents:15000,redeemed_cents:0,status:'sold',buyer_name:'Tom B.',card_code:'XG-9042'},
+  {id:'s5',sold_at:'2026-04-08T11:00:00Z',product_name:'Couples Retreat',amount_cents:32000,redeemed_cents:0,status:'sold',buyer_name:'Linda Park',card_code:'XG-5511'},
+  {id:'s6',sold_at:'2026-03-28T13:15:00Z',product_name:'Spa Day Package',amount_cents:22000,redeemed_cents:0,status:'sold',buyer_name:'Rob Chen',card_code:'XG-7732'},
+  {id:'s7',sold_at:'2026-03-20T15:00:00Z',product_name:'60-min Massage',amount_cents:9500,redeemed_cents:9500,status:'redeemed',buyer_name:'Amy L.',card_code:'XG-4401'},
+  {id:'s8',sold_at:'2026-03-15T10:30:00Z',product_name:'Open Amount',amount_cents:7500,redeemed_cents:0,status:'sold',buyer_name:'Dan K.',card_code:'XG-6610'},
+  {id:'s9',sold_at:'2026-02-14T12:00:00Z',product_name:'Couples Retreat',amount_cents:32000,redeemed_cents:32000,status:'redeemed',buyer_name:'Mike & Anna',card_code:'XG-1120'},
+  {id:'s10',sold_at:'2026-02-10T09:00:00Z',product_name:'Spa Day Package',amount_cents:22000,redeemed_cents:0,status:'sold',buyer_name:'Helen T.',card_code:'XG-8830'},
+  {id:'s11',sold_at:'2026-01-25T14:00:00Z',product_name:'60-min Massage',amount_cents:9500,redeemed_cents:0,status:'sold',buyer_name:'Pam S.',card_code:'XG-3341'},
+  {id:'s12',sold_at:'2025-12-24T10:00:00Z',product_name:'Spa Day Package',amount_cents:22000,redeemed_cents:22000,status:'redeemed',buyer_name:'Gift Buyer A',card_code:'XG-0021'},
+  {id:'s13',sold_at:'2025-12-22T11:30:00Z',product_name:'Couples Retreat',amount_cents:32000,redeemed_cents:0,status:'expired',buyer_name:'John D.',card_code:'XG-1293'},
+  {id:'s14',sold_at:'2025-12-20T09:45:00Z',product_name:'60-min Massage',amount_cents:9500,redeemed_cents:0,status:'sold',buyer_name:'Grace H.',card_code:'XG-4422'},
+  {id:'s15',sold_at:'2025-12-18T16:00:00Z',product_name:'Open Amount',amount_cents:5000,redeemed_cents:5000,status:'redeemed',buyer_name:'Chris N.',card_code:'XG-7741'},
+];
+
+const EMAIL_HTML_1=`<div style="font-family:Georgia,serif;max-width:580px;margin:0 auto;padding:40px 24px;background:#faf9f7;color:#1a1a2e">
+  <p style="font-size:12px;text-transform:uppercase;letter-spacing:0.14em;color:#888;margin-bottom:24px">Serenity Day Spa · Gift Cards</p>
+  <h1 style="font-size:36px;font-weight:400;line-height:1.1;margin-bottom:16px">Spring into<br><em style="color:#2d5a3d">Relaxation</em></h1>
+  <p style="font-size:16px;color:#444;line-height:1.7;margin-bottom:24px">This week only — enjoy <strong>20% off all gift cards</strong>. The perfect treat for yourself or someone who deserves a break.</p>
+  <a href="#" style="display:inline-block;padding:14px 28px;background:#1a1a2e;color:white;text-decoration:none;border-radius:4px;font-size:14px;font-weight:500">Shop Gift Cards →</a>
+  <p style="margin-top:40px;font-size:12px;color:#aaa">You received this because you've purchased from us before. <a href="#" style="color:#aaa">Unsubscribe</a></p>
+</div>`;
+
+const EMAIL_HTML_2=`<div style="font-family:Georgia,serif;max-width:580px;margin:0 auto;padding:40px 24px;background:#faf9f7;color:#1a1a2e">
+  <p style="font-size:12px;text-transform:uppercase;letter-spacing:0.14em;color:#888;margin-bottom:24px">Serenity Day Spa · Gift Cards</p>
+  <h1 style="font-size:36px;font-weight:400;line-height:1.1;margin-bottom:16px">Mother's Day<br>is <em style="color:#2d5a3d">coming</em></h1>
+  <p style="font-size:16px;color:#444;line-height:1.7;margin-bottom:8px">Give mom the gift of calm. Our spa packages start at $95 and arrive instantly by email.</p>
+  <ul style="font-size:15px;color:#444;line-height:2;margin:16px 0 24px 20px">
+    <li>60-min Signature Massage — $95</li>
+    <li>Spa Day Package — $220</li>
+    <li>Couples Retreat — $320</li>
+  </ul>
+  <a href="#" style="display:inline-block;padding:14px 28px;background:#2d5a3d;color:white;text-decoration:none;border-radius:4px;font-size:14px;font-weight:500">Give the Gift of Calm →</a>
+  <p style="margin-top:40px;font-size:12px;color:#aaa">You received this because you've purchased from us before. <a href="#" style="color:#aaa">Unsubscribe</a></p>
+</div>`;
+
+const EMAILS_INIT=[
+  {id:'e1',subject:'Spring into Relaxation — 20% off gift cards this week',status:'pending_approval',send_date:'2026-04-25',segment_type:'all',segment_tag:null,created_at:'2026-04-19',sender_name:'Serenity Day Spa',sender_email:'hello@serenitydayspa.com',html_content:EMAIL_HTML_1},
+  {id:'e2',subject:"Mother's Day is coming — give the gift of calm",status:'pending_approval',send_date:'2026-05-05',segment_type:'tag',segment_tag:'VIP',created_at:'2026-04-20',sender_name:'Serenity Day Spa',sender_email:'hello@serenitydayspa.com',html_content:EMAIL_HTML_2},
+  {id:'e3',subject:'New Year, New You — Our gift card bundles are back',status:'sent',send_date:'2026-01-03',segment_type:'all',segment_tag:null,created_at:'2025-12-28',sender_name:'Serenity Day Spa',sender_email:'hello@serenitydayspa.com',html_content:'<p>Sent email — HTML archived.</p>'},
+  {id:'e4',subject:'Holiday Gift Guide — Spa experiences for everyone',status:'sent',send_date:'2025-12-10',segment_type:'all',segment_tag:null,created_at:'2025-12-05',sender_name:'Serenity Day Spa',sender_email:'hello@serenitydayspa.com',html_content:'<p>Sent email — HTML archived.</p>'},
+];
+
+const PRODUCTS_INIT=[
+  {id:'p1',name:'60-min Massage',price_cents:9500,product_type:'one_time',is_active:true,image_url:null,description:'A full-body Swedish massage lasting 60 minutes. Includes aromatherapy and a complimentary hot towel wrap.',contents:[]},
+  {id:'p2',name:'Spa Day Package',price_cents:22000,product_type:'bundle',is_active:true,image_url:null,description:'A complete day of pampering. Perfect for a birthday or special occasion.',contents:['60-min Swedish Massage','30-min Facial','Lunch at the spa café','Locker room & robe access']},
+  {id:'p3',name:'Couples Retreat',price_cents:32000,product_type:'bundle',is_active:true,image_url:null,description:'Enjoy a full day of relaxation together in our couples suite.',contents:['2× 60-min Side-by-Side Massage','2× 30-min Facials','Champagne & charcuterie board','Private suite access (3 hrs)']},
+  {id:'p4',name:'Open Amount',price_cents:null,product_type:'open_amount',is_active:true,image_url:null,description:'Custom-value gift card. Recipient can apply it to any service.',contents:[]},
+  {id:'p5',name:'30-min Express Facial',price_cents:6500,product_type:'one_time',is_active:false,image_url:null,description:'Quick brightening facial using our signature vitamin-C serum. Great add-on.',contents:[]},
+];
+
+const CUSTOMERS_INIT=[
+  {id:'c1',name:'Emily Carter',email:'emily@email.com',total_spent:19000,visits:3,last_visit:'2026-04-18',tags:['VIP','Repeat']},
+  {id:'c2',name:'James Wu',email:'jwu@gmail.com',total_spent:22000,visits:1,last_visit:'2026-04-15',tags:[]},
+  {id:'c3',name:'Sarah M.',email:'sarah@mail.com',total_spent:9500,visits:2,last_visit:'2026-04-12',tags:['Repeat']},
+  {id:'c4',name:'Linda Park',email:'linda@park.com',total_spent:32000,visits:1,last_visit:'2026-04-08',tags:['VIP']},
+  {id:'c5',name:'Rob Chen',email:'rob@ch.com',total_spent:22000,visits:2,last_visit:'2026-03-28',tags:['Repeat']},
+  {id:'c6',name:'Amy L.',email:'amy@l.com',total_spent:9500,visits:4,last_visit:'2026-03-20',tags:['VIP','Loyal']},
+  {id:'c7',name:'Mike & Anna',email:'mikanna@email.com',total_spent:32000,visits:1,last_visit:'2026-02-14',tags:['Couples']},
+  {id:'c8',name:'Helen T.',email:'helen@t.com',total_spent:22000,visits:1,last_visit:'2026-02-10',tags:[]},
+  {id:'c9',name:'Pam S.',email:'pam@s.com',total_spent:9500,visits:1,last_visit:'2026-01-25',tags:[]},
+  {id:'c10',name:'Grace H.',email:'grace@h.com',total_spent:9500,visits:2,last_visit:'2025-12-20',tags:['Repeat']},
+  {id:'c11',name:'Chris N.',email:'cn@email.com',total_spent:5000,visits:1,last_visit:'2025-12-18',tags:[]},
+];
+
+/* ── HELPERS ────────────────────────────────────────────── */
+const fmt$=c=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(c/100);
+const fmtDate=iso=>new Date(iso).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+const fmtN=n=>new Intl.NumberFormat('en-US').format(n);
+
+const TAG_COLORS=['oklch(0.42 0.09 165)','oklch(0.55 0.14 240)','oklch(0.62 0.16 55)','oklch(0.5 0.16 320)','oklch(0.55 0.14 200)','oklch(0.45 0.1 285)'];
+function tagColor(tag,allTags){const i=allTags.indexOf(tag);return TAG_COLORS[i%TAG_COLORS.length]||TAG_COLORS[0];}
+
+/* ── ICONS ──────────────────────────────────────────────── */
+const ICONS={
+  grid:'M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z',
+  'bar-chart':'M12 20V10M18 20V4M6 20v-4',
+  scan:'M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2',
+  gift:'M20 12v10H4V12M22 7H2v5h20V7zM12 22V7M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z',
+  users:'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75',
+  mail:'M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zM22 6l-10 7L2 6',
+  'file-text':'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8',
+  'log-out':'M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9',
+  'trending-up':'M23 6l-9.5 9.5-5-5L1 18M17 6h6v6',
+  wallet:'M21 12V7H5a2 2 0 0 1 0-4h14v4M3 5v14a2 2 0 0 0 2 2h16v-5M16 14h.01',
+  'dollar-sign':'M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6',
+  'shopping-bag':'M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0',
+  upload:'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12',
+  download:'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3',
+  plus:'M12 5v14M5 12h14',
+  'arrow-right':'M5 12h14M12 5l7 7-7 7',
+  'arrow-left':'M19 12H5M12 19l-7-7 7-7',
+  check:'M20 6L9 17l-5-5',
+  x:'M18 6L6 18M6 6l12 12',
+  building:'M3 21h18M3 7l9-4 9 4M4 11h16v10H4z',
+  settings:'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z',
+  image:'M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM21 15l-5-5L5 21',
+  tag:'M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82zM7 7h.01',
+  'list':'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01',
+  eye:'M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8zM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z',
+  code:'M16 18l6-6-6-6M8 6l-6 6 6 6',
+};
+function Icon({name,size=16,color='currentColor'}){
+  return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{display:'inline-block',flexShrink:0}}><path d={ICONS[name]||''}/></svg>;
+}
+
+/* ── TOAST ──────────────────────────────────────────────── */
+function Toast({msg,kind,onDone}){
+  useEffect(()=>{const t=setTimeout(onDone,3000);return()=>clearTimeout(t);},[]);
+  const bg=kind==='error'?'oklch(0.45 0.18 27)':kind==='warning'?'oklch(0.38 0.12 60)':emeraldDeep;
+  return <div style={{position:'fixed',bottom:24,right:24,zIndex:9999,background:bg,color:'white',padding:'12px 18px',borderRadius:R,fontSize:14,maxWidth:320,lineHeight:1.5,boxShadow:'0 4px 16px oklch(0 0 0 / 0.15)'}}>{msg}</div>;
+}
+
+/* ── APP ────────────────────────────────────────────────── */
+function App(){
+  const [screen,setScreen]=useState(()=>localStorage.getItem('xg.screen')||'login');
+  const [user,setUser]=useState(()=>{try{return JSON.parse(localStorage.getItem('xg.user'))||null}catch{return null}});
+  const [clientId,setClientId]=useState(()=>localStorage.getItem('xg.client')||CLIENTS[0].id);
+  const [page,setPage]=useState(()=>localStorage.getItem('xg.page')||'overview');
+  const [toasts,setToasts]=useState([]);
+  const [showTweaks,setShowTweaks]=useState(false);
+  // Shared state
+  const [emails,setEmails]=useState(EMAILS_INIT);
+  const [products,setProducts]=useState(PRODUCTS_INIT);
+  const [customers,setCustomers]=useState(CUSTOMERS_INIT);
+
+  useEffect(()=>{localStorage.setItem('xg.screen',screen);},[screen]);
+  useEffect(()=>{localStorage.setItem('xg.user',JSON.stringify(user));},[user]);
+  useEffect(()=>{localStorage.setItem('xg.client',clientId);},[clientId]);
+  useEffect(()=>{localStorage.setItem('xg.page',page);},[page]);
+
+  useEffect(()=>{
+    const h=e=>{
+      if(e.data?.type==='__activate_edit_mode')setShowTweaks(true);
+      if(e.data?.type==='__deactivate_edit_mode')setShowTweaks(false);
+    };
+    window.addEventListener('message',h);
+    window.parent.postMessage({type:'__edit_mode_available'},'*');
+    return()=>window.removeEventListener('message',h);
+  },[]);
+
+  const toast=useCallback((msg,kind='success')=>setToasts(p=>[...p,{msg,kind,id:Date.now()}]),[]);
+  const allTags=useMemo(()=>[...new Set(customers.flatMap(c=>c.tags))].sort(),[customers]);
+
+  const login=email=>{setUser({email});setScreen('dashboard');toast('Signed in successfully');};
+  const logout=()=>{setUser(null);setScreen('login');setPage('overview');};
+
+  const activeClient=CLIENTS.find(c=>c.id===clientId);
+  const pendingCount=emails.filter(e=>e.status==='pending_approval').length;
+
+  return (
+    <div style={{minHeight:'100vh',background:paper}}>
+      {screen==='login'&&<LoginPage onLogin={login} toast={toast}/>}
+      {screen==='dashboard'&&(
+        <DashLayout user={user} clients={CLIENTS} clientId={clientId} setClientId={setClientId} page={page} setPage={setPage} onLogout={logout} pendingCount={pendingCount}>
+          {page==='overview'&&<OverviewPage client={activeClient} pendingCount={pendingCount} setPage={setPage}/>}
+          {page==='sales'&&<SalesPage toast={toast}/>}
+          {page==='customers'&&<CustomersPage customers={customers} setCustomers={setCustomers} allTags={allTags} toast={toast}/>}
+          {page==='emails'&&<EmailsPage emails={emails} setEmails={setEmails} allTags={allTags} toast={toast}/>}
+          {page==='products'&&<ProductsPage products={products} setProducts={setProducts} toast={toast}/>}
+          {page==='redeem'&&<RedeemPage toast={toast}/>}
+          {page==='templates'&&<TemplatesPage/>}
+          {page==='admin-clients'&&<AdminClientsPage/>}
+          {page==='admin-bookings'&&<AdminBookingsPage/>}
+        </DashLayout>
+      )}
+      {toasts.map(t=><Toast key={t.id} msg={t.msg} kind={t.kind} onDone={()=>setToasts(p=>p.filter(x=>x.id!==t.id))}/>)}
+      {showTweaks&&<TweaksPanel/>}
+    </div>
+  );
+}
+
+/* ── LOGIN ──────────────────────────────────────────────── */
+function LoginPage({onLogin,toast}){
+  const [email,setEmail]=useState('');
+  const [pw,setPw]=useState('');
+  const [loading,setLoading]=useState(false);
+  const [err,setErr]=useState('');
+
+  const submit=async e=>{
+    e.preventDefault();setErr('');
+    if(pw.length<10){setErr('Password must be at least 10 characters.');return;}
+    setLoading(true);
+    await new Promise(r=>setTimeout(r,800));
+    setLoading(false);
+    onLogin(email.trim());
+  };
+
+  return (
+    <div className="fade-up" style={{display:'flex',flexDirection:'column',minHeight:'100vh',background:paper}}>
+      <header style={{borderBottom:`1px solid ${hairline}`}}>
+        <div style={{maxWidth:1200,margin:'0 auto',padding:'0 32px',height:64,display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+          <LogoMark/>
+          <span style={{fontSize:14,color:inkSoft,cursor:'pointer'}}>← Back to site</span>
+        </div>
+      </header>
+      <main style={{flex:1,display:'flex',alignItems:'center',justifyContent:'center',padding:'64px 20px'}}>
+        <div style={{width:'100%',maxWidth:400}}>
+          <p style={{fontSize:12,textTransform:'uppercase',letterSpacing:'0.16em',color:inkMuted}}>Client portal</p>
+          <h1 style={{marginTop:12,fontSize:36,fontWeight:400,color:ink,lineHeight:1.1}}>Sign in</h1>
+          <p style={{marginTop:12,fontSize:15,color:inkSoft,lineHeight:1.6}}>Access your gift card revenue data, customers, and campaigns.</p>
+          <form onSubmit={submit} style={{marginTop:40,display:'flex',flexDirection:'column',gap:20}}>
+            <Field label="Email">
+              <input type="email" autoComplete="email" required value={email} onChange={e=>setEmail(e.target.value)} placeholder="client@xperigift.com" style={inputSt(!!err)}/>
+            </Field>
+            <Field label="Password">
+              <input type="password" autoComplete="current-password" required minLength={10} value={pw} onChange={e=>setPw(e.target.value)} style={inputSt(!!err)}/>
+            </Field>
+            {err&&<p style={{padding:'10px 12px',background:'oklch(0.97 0.03 27)',border:'1px solid oklch(0.85 0.08 27)',borderRadius:R,fontSize:13,color:'oklch(0.4 0.18 27)'}}>{err}</p>}
+            <Btn type="submit" primary fullWidth disabled={loading}>
+              {loading?<><LoadSpinner/> Signing in…</>:'Sign in'}
+            </Btn>
+          </form>
+          <p style={{marginTop:32,fontSize:13,color:inkMuted}}>Accounts are issued by xperigift. Need access? <span style={{textDecoration:'underline',textUnderlineOffset:4,cursor:'pointer'}}>Book an audit</span>.</p>
+          <p style={{marginTop:20,fontSize:12,color:inkMuted,padding:'10px 12px',background:paperSoft,borderRadius:R}}>Use any email + password ≥ 10 chars to enter the demo.</p>
+        </div>
+      </main>
+    </div>
+  );
+}
+const inputSt=err=>({width:'100%',height:44,border:`1px solid ${err?'oklch(0.55 0.18 27)':hairlineStrong}`,borderRadius:R,background:paper,padding:'0 12px',fontSize:15,color:ink,outline:'none'});
+
+/* ── DASH LAYOUT ────────────────────────────────────────── */
+const NAV=[
+  {id:'overview',label:'Overview',icon:'grid'},
+  {id:'sales',label:'Sales',icon:'bar-chart'},
+  {id:'redeem',label:'Redeem',icon:'scan'},
+  {id:'products',label:'Products',icon:'gift'},
+  {id:'customers',label:'Customers',icon:'users'},
+  {id:'emails',label:'Emails',icon:'mail'},
+  {id:'templates',label:'Templates',icon:'file-text'},
+];
+const NAV_ADMIN=[
+  {id:'admin-clients',label:'Clients',icon:'building'},
+  {id:'admin-bookings',label:'Audit bookings',icon:'settings'},
+];
+
+function DashLayout({user,clients,clientId,setClientId,page,setPage,onLogout,pendingCount,children}){
+  return(
+    <div style={{display:'flex',minHeight:'100vh',background:paperSoft}}>
+      <aside style={{width:256,flexShrink:0,display:'flex',flexDirection:'column',borderRight:`1px solid ${hairline}`,background:paper,position:'sticky',top:0,height:'100vh',overflowY:'auto'}}>
+        <div style={{height:64,display:'flex',alignItems:'center',padding:'0 20px',borderBottom:`1px solid ${hairline}`}}><LogoMark/></div>
+        <div style={{borderBottom:`1px solid ${hairline}`,padding:16}}>
+          <p style={{fontSize:11,textTransform:'uppercase',letterSpacing:'0.14em',color:inkMuted,marginBottom:8}}>Workspace</p>
+          <select value={clientId} onChange={e=>setClientId(e.target.value)} style={{width:'100%',height:36,border:`1px solid ${hairlineStrong}`,borderRadius:R,background:paper,padding:'0 8px',fontSize:14,color:ink,cursor:'pointer'}}>
+            {clients.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}
+          </select>
+        </div>
+        <nav style={{flex:1,padding:12}}>
+          <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:2}}>
+            {NAV.map(item=>{
+              const active=page===item.id;
+              const badge=item.id==='emails'&&pendingCount>0;
+              return(
+                <li key={item.id}>
+                  <button onClick={()=>setPage(item.id)} style={{width:'100%',display:'flex',alignItems:'center',gap:12,padding:'8px 12px',borderRadius:R,fontSize:14,fontWeight:active?500:400,color:active?ink:inkSoft,background:active?'oklch(0.18 0.01 270 / 0.05)':'transparent',border:'none',cursor:'pointer',textAlign:'left'}}>
+                    <Icon name={item.icon} size={16}/><span style={{flex:1}}>{item.label}</span>
+                    {badge&&<span style={{background:emerald,color:'white',fontSize:11,fontWeight:600,borderRadius:'50%',width:18,height:18,display:'flex',alignItems:'center',justifyContent:'center'}}>{pendingCount}</span>}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+          <p style={{margin:'24px 0 8px 12px',fontSize:11,textTransform:'uppercase',letterSpacing:'0.14em',color:inkMuted}}>Admin</p>
+          <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:2}}>
+            {NAV_ADMIN.map(item=>{
+              const active=page===item.id;
+              return(
+                <li key={item.id}>
+                  <button onClick={()=>setPage(item.id)} style={{width:'100%',display:'flex',alignItems:'center',gap:12,padding:'8px 12px',borderRadius:R,fontSize:14,color:active?ink:inkSoft,background:active?'oklch(0.18 0.01 270 / 0.05)':'transparent',border:'none',cursor:'pointer',textAlign:'left',fontWeight:active?500:400}}>
+                    <Icon name={item.icon} size={16}/>{item.label}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+        <div style={{borderTop:`1px solid ${hairline}`,padding:16}}>
+          <p style={{fontSize:12,color:inkMuted,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{user?.email}</p>
+          <button onClick={onLogout} style={{marginTop:8,display:'flex',alignItems:'center',gap:8,fontSize:13,color:inkSoft,background:'none',border:'none',cursor:'pointer',padding:0}}>
+            <Icon name="log-out" size={14}/> Sign out
+          </button>
+        </div>
+      </aside>
+      <main style={{flex:1,minWidth:0,overflowY:'auto'}}>{children}</main>
+    </div>
+  );
+}
+
+/* ── OVERVIEW ───────────────────────────────────────────── */
+function OverviewPage({client,pendingCount,setPage}){
+  const totalIssued=SALES.reduce((s,r)=>s+r.amount_cents,0);
+  const totalRedeemed=SALES.reduce((s,r)=>s+r.redeemed_cents,0);
+  const since30=Date.now()-30*86400000;
+  const last30=SALES.filter(r=>new Date(r.sold_at).getTime()>=since30);
+  const last30Issued=last30.reduce((s,r)=>s+r.amount_cents,0);
+  return(
+    <Shell title="Overview" subtitle={client?`Snapshot for ${client.name}`:undefined}>
+      {pendingCount>0&&(
+        <button onClick={()=>setPage('emails')} style={{marginBottom:24,width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'16px 20px',borderRadius:R,border:`1px solid var(--amber-border)`,background:'var(--amber)',cursor:'pointer',textAlign:'left'}}>
+          <div style={{display:'flex',alignItems:'center',gap:12}}>
+            <div style={{width:36,height:36,borderRadius:'50%',background:'oklch(0.85 0.12 75)',display:'flex',alignItems:'center',justifyContent:'center',color:'var(--amber-text)'}}><Icon name="mail" size={16}/></div>
+            <div>
+              <p style={{fontSize:14,fontWeight:500,color:'var(--amber-text)'}}>You have {pendingCount} {pendingCount===1?'email':'emails'} to approve before sending</p>
+              <p style={{fontSize:12,color:'oklch(0.4 0.1 60)',marginTop:2}}>Review and approve drafts in your campaigns queue.</p>
+            </div>
+          </div>
+          <span style={{fontSize:13,fontWeight:500,color:'var(--amber-text)',display:'flex',alignItems:'center',gap:4}}>Review <Icon name="arrow-right" size={14}/></span>
+        </button>
+      )}
+      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:16}}>
+        <KpiCard label="Last 30 days" value={fmt$(last30Issued)} hint={`${fmtN(last30.length)} cards sold`} tone="emerald" icon="trending-up"/>
+        <KpiCard label="All-time revenue" value={fmt$(totalIssued)} hint={`${fmtN(SALES.length)} total sales`} tone="ink" icon="wallet"/>
+        <KpiCard label="Outstanding" value={fmt$(totalIssued-totalRedeemed)} hint="Issued minus redeemed" tone="sky"/>
+        <KpiCard label="Customers" value={fmtN(CUSTOMERS_INIT.length)} hint="In your CRM" icon="users"/>
+      </div>
+      <div style={{marginTop:40,display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
+        {[{id:'sales',title:'Review sales',body:'See gift cards sold, top products, and import new sales from CSV.',cta:'Open sales'},{id:'emails',title:'Draft a campaign',body:'Upload your HTML, schedule a send date, choose customers, and get it approved.',cta:'Open emails'}].map(card=>(
+          <button key={card.id} onClick={()=>setPage(card.id)} style={{padding:24,border:`1px solid ${hairline}`,borderRadius:R,background:paper,textAlign:'left',cursor:'pointer'}} onMouseEnter={e=>e.currentTarget.style.borderColor=hairlineStrong} onMouseLeave={e=>e.currentTarget.style.borderColor=hairline}>
+            <h2 style={{fontSize:20,color:ink}}>{card.title}</h2>
+            <p style={{marginTop:8,fontSize:14,color:inkMuted,lineHeight:1.5}}>{card.body}</p>
+            <span style={{marginTop:12,display:'inline-flex',alignItems:'center',gap:4,fontSize:13,fontWeight:500,color:emeraldDeep}}>{card.cta} <Icon name="arrow-right" size={13}/></span>
+          </button>
+        ))}
+      </div>
+    </Shell>
+  );
+}
+
+/* ── SALES ──────────────────────────────────────────────── */
+function SalesPage({toast}){
+  const [filterStatus,setFilterStatus]=useState('all');
+  const kpis={count:SALES.length,total:SALES.reduce((s,r)=>s+r.amount_cents,0),avg:Math.round(SALES.reduce((s,r)=>s+r.amount_cents,0)/SALES.length),redeemed:SALES.reduce((s,r)=>s+r.redeemed_cents,0)};
+  const months=['May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr'];
+  const chartVals=[1200,900,1100,1400,1600,2100,4800,6200,2800,3100,2200,6700];
+  const maxV=Math.max(...chartVals);
+  const breakdown=Object.entries(SALES.reduce((acc,r)=>{const k=r.product_name||'Other';if(!acc[k])acc[k]={count:0,amount:0};acc[k].count++;acc[k].amount+=r.amount_cents;return acc},{})).map(([name,v])=>({name,...v})).sort((a,b)=>b.amount-a.amount);
+  const maxB=breakdown[0]?.amount||1;
+  const PAL=['oklch(0.42 0.09 165)','oklch(0.55 0.14 240)','oklch(0.62 0.16 55)','oklch(0.5 0.16 320)','oklch(0.55 0.14 200)'];
+  const filtered=filterStatus==='all'?SALES:SALES.filter(r=>r.status===filterStatus);
+  return(
+    <Shell title="Sales" subtitle="Gift cards sold, revenue, and breakdown by service or bundle."
+      actions={<><Btn icon="upload" onClick={()=>toast('CSV import connects to live Supabase in production')}>Import CSV</Btn><Btn icon="download" onClick={()=>toast('Exported sales.csv')}>Export</Btn><Btn icon="plus" primary onClick={()=>toast('New sale dialog — connects to Supabase in production')}>New sale</Btn></>}>
+      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:16}}>
+        <KpiCard label="Cards sold" value={fmtN(kpis.count)} tone="ink" icon="shopping-bag"/>
+        <KpiCard label="Revenue" value={fmt$(kpis.total)} tone="emerald" icon="dollar-sign"/>
+        <KpiCard label="Avg ticket" value={fmt$(kpis.avg)} icon="trending-up"/>
+        <KpiCard label="Redeemed" value={fmt$(kpis.redeemed)} hint={`${Math.round(kpis.redeemed/kpis.total*100)}% of issued`} tone="sky"/>
+      </div>
+      <Card style={{marginTop:24}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}><h2 style={{fontSize:18,color:ink}}>Revenue trend</h2><span style={{fontSize:12,color:inkMuted}}>Last 12 months</span></div>
+        <div style={{display:'flex',alignItems:'flex-end',gap:6,height:160}}>
+          {chartVals.map((v,i)=>(
+            <div key={i} style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',gap:4}}>
+              <div style={{width:'100%',height:Math.round((v/maxV)*148),background:i===11?emerald:hairlineStrong,borderRadius:'2px 2px 0 0'}}/>
+              <span style={{fontSize:9,color:inkMuted}}>{months[i]}</span>
+            </div>
+          ))}
+        </div>
+      </Card>
+      <Card style={{marginTop:16}}>
+        <div style={{display:'flex',justifyContent:'space-between',marginBottom:20}}><h2 style={{fontSize:18,color:ink}}>Top products</h2><span style={{fontSize:12,color:inkMuted}}>By revenue</span></div>
+        <div style={{display:'flex',flexDirection:'column',gap:14}}>
+          {breakdown.map((p,i)=>(
+            <div key={p.name}>
+              <div style={{display:'flex',justifyContent:'space-between',fontSize:13,marginBottom:6}}><span style={{color:ink}}>{p.name}</span><span style={{color:inkSoft}}>{fmt$(p.amount)} · {p.count} cards</span></div>
+              <div style={{height:8,borderRadius:9999,background:paperSoft,overflow:'hidden'}}><div style={{height:'100%',width:`${(p.amount/maxB)*100}%`,background:PAL[i%PAL.length],borderRadius:9999}}/></div>
+            </div>
+          ))}
+        </div>
+      </Card>
+      <div style={{marginTop:16,display:'flex',alignItems:'center',gap:12,flexWrap:'wrap'}}>
+        <span style={{fontSize:13,color:inkMuted}}>Status</span>
+        <select value={filterStatus} onChange={e=>setFilterStatus(e.target.value)} style={{height:36,border:`1px solid ${hairlineStrong}`,borderRadius:R,background:paper,padding:'0 8px',fontSize:13,color:ink}}>
+          {['all','sold','partially_redeemed','redeemed','refunded','expired'].map(s=><option key={s} value={s}>{s.replace('_',' ')}</option>)}
+        </select>
+        <span style={{marginLeft:'auto',fontSize:13,color:inkMuted}}>{filtered.length} rows</span>
+      </div>
+      <TableWrap style={{marginTop:8}}>
+        <thead><THead cols={['Sold','Product','Amount','Redeemed','Status','Buyer','Action']}/></thead>
+        <tbody>
+          {filtered.map(r=>{
+            const canRedeem=(r.amount_cents-r.redeemed_cents)>0&&r.status!=='refunded'&&r.status!=='expired';
+            return(
+              <tr key={r.id} style={{borderBottom:`1px solid ${hairline}`}}>
+                <TD muted>{fmtDate(r.sold_at)}</TD><TD>{r.product_name}</TD><TD bold>{fmt$(r.amount_cents)}</TD><TD muted>{fmt$(r.redeemed_cents)}</TD>
+                <TD><StatusBadge s={r.status}/></TD><TD muted>{r.buyer_name||'—'}</TD>
+                <TD right><Btn icon="scan" disabled={!canRedeem} onClick={()=>toast(`Redeeming: ${r.card_code} (${fmt$(r.amount_cents-r.redeemed_cents)} remaining)`)}>Redeem</Btn></TD>
+              </tr>
+            );
+          })}
+        </tbody>
+      </TableWrap>
+    </Shell>
+  );
+}
+
+/* ── CUSTOMERS ──────────────────────────────────────────── */
+function CustomersPage({customers,setCustomers,allTags,toast}){
+  const avgSpend=Math.round(customers.reduce((s,c)=>s+c.total_spent,0)/customers.length);
+  const repeats=customers.filter(c=>c.visits>1).length;
+  const [addingTagFor,setAddingTagFor]=useState(null);
+  const [newTagInput,setNewTagInput]=useState('');
+  const tagInputRef=useRef();
+  useEffect(()=>{if(addingTagFor&&tagInputRef.current)tagInputRef.current.focus();},[addingTagFor]);
+
+  const addTag=(cid,tag)=>{
+    if(!tag.trim())return;
+    setCustomers(prev=>prev.map(c=>c.id===cid&&!c.tags.includes(tag)?{...c,tags:[...c.tags,tag]}:c));
+    setNewTagInput('');setAddingTagFor(null);
+    toast(`Tag "${tag}" added`);
+  };
+  const removeTag=(cid,tag)=>{
+    setCustomers(prev=>prev.map(c=>c.id===cid?{...c,tags:c.tags.filter(t=>t!==tag)}:c));
+  };
+
+  return(
+    <Shell title="Customers" subtitle="Gift card buyers — manage tags to target email campaigns.">
+      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:16,marginBottom:24}}>
+        <KpiCard label="Total" value={fmtN(customers.length)} tone="ink" icon="users"/>
+        <KpiCard label="Avg spend" value={fmt$(avgSpend)} tone="emerald" icon="dollar-sign"/>
+        <KpiCard label="Repeat buyers" value={fmtN(repeats)} hint={`${Math.round(repeats/customers.length*100)}% of base`} icon="trending-up"/>
+      </div>
+      {allTags.length>0&&(
+        <div style={{marginBottom:16,display:'flex',alignItems:'center',gap:8,flexWrap:'wrap'}}>
+          <span style={{fontSize:12,color:inkMuted,textTransform:'uppercase',letterSpacing:'0.12em',marginRight:4}}>Tags in use:</span>
+          {allTags.map(tag=>(
+            <span key={tag} style={{fontSize:12,padding:'3px 10px',borderRadius:9999,background:tagColor(tag,allTags)+'22',color:tagColor(tag,allTags),border:`1px solid ${tagColor(tag,allTags)}44`,fontWeight:500}}>
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+      <TableWrap>
+        <thead><THead cols={['Name','Email','Total spent','Visits','Last visit','Tags']}/></thead>
+        <tbody>
+          {customers.map(c=>(
+            <tr key={c.id} style={{borderBottom:`1px solid ${hairline}`}}>
+              <TD bold>{c.name}</TD>
+              <TD muted>{c.email}</TD>
+              <TD>{fmt$(c.total_spent)}</TD>
+              <TD muted>{c.visits}</TD>
+              <TD muted>{fmtDate(c.last_visit)}</TD>
+              <td style={{padding:'8px 16px'}}>
+                <div style={{display:'flex',alignItems:'center',gap:6,flexWrap:'wrap'}}>
+                  {c.tags.map(tag=>(
+                    <span key={tag} style={{display:'inline-flex',alignItems:'center',gap:4,fontSize:11,padding:'2px 8px 2px 10px',borderRadius:9999,background:tagColor(tag,allTags)+'22',color:tagColor(tag,allTags),border:`1px solid ${tagColor(tag,allTags)}44`,fontWeight:500,cursor:'default'}}>
+                      {tag}
+                      <button onClick={()=>removeTag(c.id,tag)} style={{background:'none',border:'none',cursor:'pointer',display:'flex',alignItems:'center',color:tagColor(tag,allTags),padding:0,opacity:0.7,lineHeight:1}} title="Remove tag"><Icon name="x" size={10}/></button>
+                    </span>
+                  ))}
+                  {addingTagFor===c.id?(
+                    <div style={{display:'flex',alignItems:'center',gap:4}}>
+                      <input ref={tagInputRef} value={newTagInput} onChange={e=>setNewTagInput(e.target.value)}
+                        onKeyDown={e=>{if(e.key==='Enter')addTag(c.id,newTagInput);if(e.key==='Escape'){setAddingTagFor(null);setNewTagInput('');}}}
+                        placeholder="New tag…"
+                        style={{height:24,width:90,border:`1px solid ${hairlineStrong}`,borderRadius:9999,padding:'0 8px',fontSize:11,outline:'none',background:paper,color:ink}}
+                      />
+                      {allTags.filter(t=>!c.tags.includes(t)&&(!newTagInput||t.toLowerCase().includes(newTagInput.toLowerCase()))).slice(0,4).map(t=>(
+                        <button key={t} onClick={()=>addTag(c.id,t)} style={{fontSize:11,padding:'2px 8px',borderRadius:9999,background:paperSoft,border:`1px solid ${hairlineStrong}`,color:inkSoft,cursor:'pointer'}}>{t}</button>
+                      ))}
+                      <button onClick={()=>{setAddingTagFor(null);setNewTagInput('');}} style={{background:'none',border:'none',cursor:'pointer',color:inkMuted,padding:0}}><Icon name="x" size={12}/></button>
+                    </div>
+                  ):(
+                    <button onClick={()=>setAddingTagFor(c.id)} style={{height:22,width:22,borderRadius:'50%',border:`1px dashed ${hairlineStrong}`,background:'transparent',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',color:inkMuted}} title="Add tag">
+                      <Icon name="plus" size={11}/>
+                    </button>
+                  )}
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </TableWrap>
+    </Shell>
+  );
+}
+
+/* ── EMAILS ─────────────────────────────────────────────── */
+function EmailsPage({emails,setEmails,allTags,toast}){
+  const [selected,setSelected]=useState(null);
+
+  const approve=id=>{setEmails(p=>p.map(e=>e.id===id?{...e,status:'approved'}:e));toast('Email approved — queued for send');setSelected(null);};
+  const reject=id=>{setEmails(p=>p.map(e=>e.id===id?{...e,status:'rejected'}:e));toast('Email returned to Xperigift team','warning');setSelected(null);};
+  const save=updated=>{setEmails(p=>p.map(e=>e.id===updated.id?updated:e));toast('Changes saved');};
+
+  if(selected){
+    const email=emails.find(e=>e.id===selected);
+    return <EmailEditor email={email} allTags={allTags} onBack={()=>setSelected(null)} onSave={save} onApprove={approve} onReject={reject} toast={toast}/>;
+  }
+
+  const pending=emails.filter(e=>e.status==='pending_approval');
+  return(
+    <Shell title="Emails" subtitle="Review and approve campaigns before they send."
+      actions={<Btn icon="plus" primary onClick={()=>toast('New campaign request sent to Xperigift team')}>New campaign</Btn>}>
+      {pending.length>0&&(
+        <div style={{marginBottom:32}}>
+          <p style={{fontSize:12,textTransform:'uppercase',letterSpacing:'0.14em',color:inkMuted,marginBottom:12}}>Awaiting your approval</p>
+          <div style={{display:'flex',flexDirection:'column',gap:10}}>
+            {pending.map(e=>(
+              <div key={e.id} style={{border:`1px solid var(--amber-border)`,borderRadius:R,background:'var(--amber)',padding:'16px 20px',display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:16}}>
+                <div style={{flex:1,minWidth:0}}>
+                  <button onClick={()=>setSelected(e.id)} style={{background:'none',border:'none',padding:0,cursor:'pointer',textAlign:'left'}}>
+                    <p style={{fontWeight:500,color:ink,fontSize:15,textDecoration:'underline',textUnderlineOffset:3,textDecorationColor:hairlineStrong}}>{e.subject}</p>
+                  </button>
+                  <p style={{fontSize:13,color:inkMuted,marginTop:4}}>To: {e.segment_type==='all'?'All contacts':`Tagged: ${e.segment_tag}`} · Scheduled: {fmtDate(e.send_date)}</p>
+                </div>
+                <div style={{display:'flex',gap:8,flexShrink:0}}>
+                  <Btn onClick={()=>setSelected(e.id)} icon="eye">Review</Btn>
+                  <Btn onClick={()=>reject(e.id)}>Return</Btn>
+                  <Btn primary onClick={()=>approve(e.id)}>Approve</Btn>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      <p style={{fontSize:12,textTransform:'uppercase',letterSpacing:'0.14em',color:inkMuted,marginBottom:12}}>All campaigns</p>
+      <TableWrap>
+        <thead><THead cols={['Subject','Segment','Send date','Status']}/></thead>
+        <tbody>
+          {emails.map(e=>{
+            const col={pending_approval:'oklch(0.42 0.12 70)',approved:emeraldDeep,sent:inkMuted,rejected:'oklch(0.45 0.18 27)'}[e.status]||inkMuted;
+            return(
+              <tr key={e.id} style={{borderBottom:`1px solid ${hairline}`}}>
+                <td style={{padding:'12px 16px'}}>
+                  <button onClick={()=>setSelected(e.id)} style={{background:'none',border:'none',padding:0,cursor:'pointer',fontSize:14,fontWeight:500,color:ink,textAlign:'left',textDecoration:'underline',textUnderlineOffset:3,textDecorationColor:hairlineStrong}}>
+                    {e.subject}
+                  </button>
+                </td>
+                <TD muted>{e.segment_type==='all'?'All contacts':`Tagged: ${e.segment_tag}`}</TD>
+                <TD muted>{fmtDate(e.send_date)}</TD>
+                <TD><span style={{fontSize:12,fontWeight:500,color:col,textTransform:'capitalize'}}>{e.status.replace('_',' ')}</span></TD>
+              </tr>
+            );
+          })}
+        </tbody>
+      </TableWrap>
+    </Shell>
+  );
+}
+
+/* ── EMAIL EDITOR ───────────────────────────────────────── */
+function EmailEditor({email,allTags,onBack,onSave,onApprove,onReject,toast}){
+  const [draft,setDraft]=useState({...email});
+  const [previewMode,setPreviewMode]=useState(false);
+  const iframeRef=useRef();
+
+  const update=patch=>setDraft(p=>({...p,...patch}));
+
+  const segmentLabel=draft.segment_type==='all'?`All contacts (${CUSTOMERS_INIT.length})`
+    :`Tagged: ${draft.segment_tag||'—'} (${CUSTOMERS_INIT.filter(c=>c.tags?.includes(draft.segment_tag)).length} contacts)`;
+
+  const canEdit=draft.status!=='sent';
+
+  return(
+    <div className="fade-up" style={{display:'flex',flexDirection:'column',height:'100vh',overflow:'hidden'}}>
+      {/* Top bar */}
+      <div style={{borderBottom:`1px solid ${hairline}`,background:paper,padding:'0 24px',height:56,display:'flex',alignItems:'center',gap:16,flexShrink:0}}>
+        <button onClick={onBack} style={{display:'flex',alignItems:'center',gap:6,fontSize:13,color:inkSoft,background:'none',border:'none',cursor:'pointer',padding:0,flexShrink:0}}>
+          <Icon name="arrow-left" size={15}/> Back
+        </button>
+        <div style={{width:1,height:20,background:hairline,flexShrink:0}}/>
+        {canEdit?(
+          <input value={draft.subject} onChange={e=>update({subject:e.target.value})}
+            style={{flex:1,fontSize:15,fontWeight:500,color:ink,border:'none',outline:'none',background:'transparent',minWidth:0}}
+            placeholder="Email subject…"/>
+        ):(
+          <span style={{flex:1,fontSize:15,fontWeight:500,color:ink,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{draft.subject}</span>
+        )}
+        <div style={{display:'flex',gap:8,flexShrink:0}}>
+          {canEdit&&<Btn onClick={()=>onSave(draft)}>Save changes</Btn>}
+          {draft.status==='pending_approval'&&<>
+            <Btn onClick={()=>onReject(draft.id)}>Return</Btn>
+            <Btn primary onClick={()=>{onSave(draft);onApprove(draft.id);}}>Approve & send</Btn>
+          </>}
+        </div>
+      </div>
+
+      {/* Meta row */}
+      <div style={{borderBottom:`1px solid ${hairline}`,background:paperSoft,padding:'10px 24px',display:'flex',alignItems:'center',gap:24,flexShrink:0,flexWrap:'wrap'}}>
+        <MetaField label="From name">
+          {canEdit?<input value={draft.sender_name} onChange={e=>update({sender_name:e.target.value})} style={{fontSize:13,color:ink,border:'none',borderBottom:`1px solid ${hairlineStrong}`,outline:'none',background:'transparent',padding:'1px 0',minWidth:150}}/>
+            :<span style={{fontSize:13,color:ink}}>{draft.sender_name}</span>}
+        </MetaField>
+        <MetaField label="From email">
+          {canEdit?<input value={draft.sender_email} onChange={e=>update({sender_email:e.target.value})} style={{fontSize:13,color:ink,border:'none',borderBottom:`1px solid ${hairlineStrong}`,outline:'none',background:'transparent',padding:'1px 0',minWidth:180}}/>
+            :<span style={{fontSize:13,color:ink}}>{draft.sender_email}</span>}
+        </MetaField>
+        <MetaField label="Send date">
+          {canEdit?<input type="date" value={draft.send_date} onChange={e=>update({send_date:e.target.value})} style={{fontSize:13,color:ink,border:'none',borderBottom:`1px solid ${hairlineStrong}`,outline:'none',background:'transparent',padding:'1px 0'}}/>
+            :<span style={{fontSize:13,color:ink}}>{fmtDate(draft.send_date)}</span>}
+        </MetaField>
+        <MetaField label="Send to">
+          {canEdit?(
+            <div style={{display:'flex',alignItems:'center',gap:8}}>
+              <select value={draft.segment_type} onChange={e=>update({segment_type:e.target.value,segment_tag:null})}
+                style={{fontSize:13,color:ink,border:'none',borderBottom:`1px solid ${hairlineStrong}`,outline:'none',background:'transparent',cursor:'pointer'}}>
+                <option value="all">All contacts</option>
+                <option value="tag">By tag</option>
+              </select>
+              {draft.segment_type==='tag'&&(
+                <select value={draft.segment_tag||''} onChange={e=>update({segment_tag:e.target.value})}
+                  style={{fontSize:13,color:ink,border:'none',borderBottom:`1px solid ${hairlineStrong}`,outline:'none',background:'transparent',cursor:'pointer'}}>
+                  <option value="">Pick a tag…</option>
+                  {allTags.map(t=><option key={t} value={t}>{t}</option>)}
+                </select>
+              )}
+            </div>
+          ):<span style={{fontSize:13,color:ink}}>{segmentLabel}</span>}
+        </MetaField>
+        <div style={{marginLeft:'auto',display:'flex',gap:2,padding:'2px',border:`1px solid ${hairlineStrong}`,borderRadius:R,background:paper,flexShrink:0}}>
+          {[{id:false,icon:'code',label:'HTML'},{id:true,icon:'eye',label:'Preview'}].map(m=>(
+            <button key={m.label} onClick={()=>setPreviewMode(m.id)}
+              style={{display:'flex',alignItems:'center',gap:5,padding:'4px 10px',borderRadius:'2px',fontSize:12,border:'none',cursor:'pointer',background:previewMode===m.id?ink:'transparent',color:previewMode===m.id?paper:inkSoft,fontWeight:previewMode===m.id?500:400}}>
+              <Icon name={m.icon} size={12}/>{m.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Split editor */}
+      <div style={{flex:1,display:'flex',overflow:'hidden'}}>
+        {/* HTML editor */}
+        {!previewMode&&(
+          <div style={{flex:1,display:'flex',overflow:'hidden',borderRight:`1px solid ${hairline}`}}>
+            <textarea
+              value={draft.html_content}
+              onChange={e=>update({html_content:e.target.value})}
+              readOnly={!canEdit}
+              spellCheck={false}
+              style={{flex:1,padding:20,fontSize:13,lineHeight:1.7,color:ink,background:canEdit?paper:paperSoft,border:'none',outline:'none',resize:'none',fontFamily:'ui-monospace,Consolas,monospace',overflowY:'auto'}}
+            />
+          </div>
+        )}
+        {/* Preview */}
+        <div style={{flex:1,overflow:'auto',background:paperSoft,display:'flex',flexDirection:'column'}}>
+          <div style={{padding:'12px 20px',borderBottom:`1px solid ${hairline}`,background:paper,fontSize:12,color:inkMuted,display:'flex',alignItems:'center',gap:6}}>
+            <Icon name="eye" size={12}/> Email preview
+          </div>
+          <div style={{flex:1,padding:24,overflow:'auto'}}>
+            <div style={{maxWidth:620,margin:'0 auto',background:'white',boxShadow:'0 2px 16px oklch(0 0 0 / 0.08)',borderRadius:4,overflow:'hidden'}}
+              dangerouslySetInnerHTML={{__html:draft.html_content}}/>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MetaField({label,children}){
+  return(
+    <div style={{display:'flex',flexDirection:'column',gap:2}}>
+      <p style={{fontSize:10,textTransform:'uppercase',letterSpacing:'0.12em',color:inkMuted}}>{label}</p>
+      {children}
+    </div>
+  );
+}
+
+/* ── PRODUCTS ───────────────────────────────────────────── */
+function ProductsPage({products,setProducts,toast}){
+  const [selected,setSelected]=useState(null);
+
+  const saveProduct=updated=>{
+    setProducts(p=>p.map(pr=>pr.id===updated.id?updated:pr));
+    toast('Product saved');
+    setSelected(null);
+  };
+
+  if(selected){
+    const product=products.find(p=>p.id===selected);
+    return <ProductEditor product={product} onBack={()=>setSelected(null)} onSave={saveProduct}/>;
+  }
+
+  return(
+    <Shell title="Products" subtitle="Your gift card catalog — click a product to edit details, images, and bundle contents.">
+      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))',gap:16}}>
+        {products.map(p=>(
+          <button key={p.id} onClick={()=>setSelected(p.id)}
+            style={{border:`1px solid ${hairline}`,borderRadius:R,background:paper,padding:0,textAlign:'left',cursor:'pointer',overflow:'hidden',display:'flex',flexDirection:'column'}}
+            onMouseEnter={e=>e.currentTarget.style.borderColor=hairlineStrong}
+            onMouseLeave={e=>e.currentTarget.style.borderColor=hairline}>
+            {/* Image area */}
+            <div style={{width:'100%',height:140,background:p.image_url?'transparent':paperSoft,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,overflow:'hidden',position:'relative'}}>
+              {p.image_url
+                ?<img src={p.image_url} alt={p.name} style={{width:'100%',height:'100%',objectFit:'cover'}}/>
+                :<div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:8}}>
+                  <Icon name="image" size={28} color={hairlineStrong}/>
+                  <span style={{fontSize:11,color:inkMuted}}>No image — click to add</span>
+                </div>
+              }
+              {!p.is_active&&<span style={{position:'absolute',top:8,right:8,background:inkSoft,color:'white',fontSize:10,padding:'2px 8px',borderRadius:9999,fontWeight:600}}>Inactive</span>}
+            </div>
+            <div style={{padding:16,flex:1,display:'flex',flexDirection:'column',gap:6}}>
+              <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:8}}>
+                <h3 style={{fontSize:16,color:ink,fontWeight:600,flex:1}}>{p.name}</h3>
+                <span style={{fontSize:18,fontFamily:'Fraunces,Georgia,serif',color:emeraldDeep,flexShrink:0}}>{p.price_cents?fmt$(p.price_cents):'Open'}</span>
+              </div>
+              <span style={{display:'inline-flex',alignItems:'center',width:'fit-content',height:22,padding:'0 8px',borderRadius:R,background:paperSoft,fontSize:11,color:inkMuted}}>{p.product_type.replace('_',' ')}</span>
+              {p.description&&<p style={{fontSize:13,color:inkSoft,lineHeight:1.5,marginTop:2}}>{p.description}</p>}
+              {p.contents?.length>0&&(
+                <div style={{marginTop:4,paddingTop:8,borderTop:`1px solid ${hairline}`}}>
+                  <p style={{fontSize:11,textTransform:'uppercase',letterSpacing:'0.1em',color:inkMuted,marginBottom:4}}>Includes</p>
+                  <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:3}}>
+                    {p.contents.slice(0,3).map(item=>(
+                      <li key={item} style={{fontSize:12,color:inkSoft,display:'flex',alignItems:'center',gap:6}}>
+                        <span style={{width:4,height:4,borderRadius:'50%',background:emerald,flexShrink:0}}/>
+                        {item}
+                      </li>
+                    ))}
+                    {p.contents.length>3&&<li style={{fontSize:12,color:inkMuted}}>+{p.contents.length-3} more…</li>}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </button>
+        ))}
+      </div>
+    </Shell>
+  );
+}
+
+/* ── PRODUCT EDITOR ─────────────────────────────────────── */
+function ProductEditor({product,onBack,onSave}){
+  const [draft,setDraft]=useState({...product});
+  const [newItem,setNewItem]=useState('');
+  const fileRef=useRef();
+
+  const update=patch=>setDraft(p=>({...p,...patch}));
+
+  const handleImage=e=>{
+    const file=e.target.files?.[0];
+    if(!file)return;
+    const reader=new FileReader();
+    reader.onload=ev=>update({image_url:ev.target.result});
+    reader.readAsDataURL(file);
+  };
+
+  const addContent=()=>{
+    if(!newItem.trim())return;
+    update({contents:[...draft.contents,newItem.trim()]});
+    setNewItem('');
+  };
+  const removeContent=i=>update({contents:draft.contents.filter((_,idx)=>idx!==i)});
+
+  return(
+    <div className="fade-up" style={{maxWidth:1200,margin:'0 auto',padding:'32px'}}>
+      {/* Back + title */}
+      <div style={{display:'flex',alignItems:'center',gap:16,marginBottom:32}}>
+        <button onClick={onBack} style={{display:'flex',alignItems:'center',gap:6,fontSize:13,color:inkSoft,background:'none',border:'none',cursor:'pointer',padding:0}}>
+          <Icon name="arrow-left" size={15}/> All products
+        </button>
+        <span style={{width:1,height:20,background:hairline}}/>
+        <h1 style={{fontSize:28,fontWeight:400,color:ink,flex:1}}>{draft.name}</h1>
+        <div style={{display:'flex',gap:8}}>
+          <Btn onClick={onBack}>Cancel</Btn>
+          <Btn primary onClick={()=>onSave(draft)}>Save product</Btn>
+        </div>
+      </div>
+
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:24,alignItems:'start'}}>
+        {/* Left: image + basics */}
+        <div style={{display:'flex',flexDirection:'column',gap:16}}>
+          {/* Image */}
+          <Card>
+            <p style={{fontSize:12,textTransform:'uppercase',letterSpacing:'0.12em',color:inkMuted,marginBottom:12}}>Product image</p>
+            <input ref={fileRef} type="file" accept="image/*" style={{display:'none'}} onChange={handleImage}/>
+            <div onClick={()=>fileRef.current?.click()} style={{width:'100%',height:200,border:`2px dashed ${hairlineStrong}`,borderRadius:R,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',cursor:'pointer',overflow:'hidden',background:paperSoft,position:'relative'}}
+              onMouseEnter={e=>e.currentTarget.style.borderColor=ink}
+              onMouseLeave={e=>e.currentTarget.style.borderColor=hairlineStrong}>
+              {draft.image_url
+                ?<><img src={draft.image_url} alt="Product" style={{width:'100%',height:'100%',objectFit:'cover'}}/>
+                  <div style={{position:'absolute',inset:0,background:'oklch(0 0 0 / 0.35)',display:'flex',alignItems:'center',justifyContent:'center',opacity:0,transition:'opacity 0.15s'}} onMouseEnter={e=>e.currentTarget.style.opacity=1} onMouseLeave={e=>e.currentTarget.style.opacity=0}>
+                    <span style={{color:'white',fontSize:13,fontWeight:500}}>Change image</span>
+                  </div></>
+                :<><Icon name="upload" size={24} color={inkMuted}/><p style={{fontSize:13,color:inkMuted,marginTop:8}}>Click to upload an image</p><p style={{fontSize:11,color:inkMuted,marginTop:4}}>JPG, PNG, WebP — up to 5MB</p></>
+              }
+            </div>
+            {draft.image_url&&<button onClick={()=>update({image_url:null})} style={{marginTop:8,fontSize:12,color:inkMuted,background:'none',border:'none',cursor:'pointer',textDecoration:'underline',textUnderlineOffset:3}}>Remove image</button>}
+          </Card>
+
+          {/* Basic info */}
+          <Card>
+            <p style={{fontSize:12,textTransform:'uppercase',letterSpacing:'0.12em',color:inkMuted,marginBottom:16}}>Details</p>
+            <div style={{display:'flex',flexDirection:'column',gap:14}}>
+              <Field label="Product name"><input value={draft.name} onChange={e=>update({name:e.target.value})} style={{...inputSt(),height:40,fontSize:14}}/></Field>
+              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+                <Field label="Type">
+                  <select value={draft.product_type} onChange={e=>update({product_type:e.target.value})} style={{height:40,border:`1px solid ${hairlineStrong}`,borderRadius:R,background:paper,padding:'0 8px',fontSize:14,color:ink,outline:'none'}}>
+                    <option value="one_time">One-time service</option>
+                    <option value="bundle">Bundle</option>
+                    <option value="open_amount">Open amount</option>
+                  </select>
+                </Field>
+                <Field label="Price (USD)">
+                  <input type="number" step="0.01" min="0" placeholder="Open" value={draft.price_cents!=null?draft.price_cents/100:''} onChange={e=>update({price_cents:e.target.value?Math.round(parseFloat(e.target.value)*100):null})} style={{...inputSt(),height:40,fontSize:14}}/>
+                </Field>
+              </div>
+              <Field label="Status">
+                <label style={{display:'flex',alignItems:'center',gap:8,cursor:'pointer',fontSize:14,color:ink}}>
+                  <input type="checkbox" checked={draft.is_active} onChange={e=>update({is_active:e.target.checked})} style={{width:16,height:16,accentColor:emeraldDeep}}/> Active — visible to campaigns
+                </label>
+              </Field>
+            </div>
+          </Card>
+        </div>
+
+        {/* Right: description + bundle contents */}
+        <div style={{display:'flex',flexDirection:'column',gap:16}}>
+          <Card>
+            <p style={{fontSize:12,textTransform:'uppercase',letterSpacing:'0.12em',color:inkMuted,marginBottom:12}}>Description</p>
+            <textarea value={draft.description} onChange={e=>update({description:e.target.value})} rows={5}
+              placeholder="Describe what this gift card covers. Appears in campaigns and buyer-facing materials."
+              style={{width:'100%',border:`1px solid ${hairlineStrong}`,borderRadius:R,background:paper,padding:'10px 12px',fontSize:14,color:ink,outline:'none',lineHeight:1.6,resize:'vertical'}}/>
+          </Card>
+
+          {(draft.product_type==='bundle'||draft.contents?.length>0)&&(
+            <Card>
+              <p style={{fontSize:12,textTransform:'uppercase',letterSpacing:'0.12em',color:inkMuted,marginBottom:12}}>Bundle contents</p>
+              <div style={{display:'flex',flexDirection:'column',gap:8,marginBottom:12}}>
+                {draft.contents?.map((item,i)=>(
+                  <div key={i} style={{display:'flex',alignItems:'center',gap:8,padding:'8px 12px',background:paperSoft,borderRadius:R}}>
+                    <span style={{width:6,height:6,borderRadius:'50%',background:emerald,flexShrink:0}}/>
+                    <span style={{flex:1,fontSize:14,color:ink}}>{item}</span>
+                    <button onClick={()=>removeContent(i)} style={{background:'none',border:'none',cursor:'pointer',color:inkMuted,padding:0,display:'flex',alignItems:'center'}}><Icon name="x" size={14}/></button>
+                  </div>
+                ))}
+                {(!draft.contents||draft.contents.length===0)&&<p style={{fontSize:13,color:inkMuted,fontStyle:'italic'}}>No items yet. Add what's included in this bundle.</p>}
+              </div>
+              <div style={{display:'flex',gap:8}}>
+                <input value={newItem} onChange={e=>setNewItem(e.target.value)} placeholder="e.g. 60-min Swedish Massage"
+                  onKeyDown={e=>e.key==='Enter'&&addContent()}
+                  style={{flex:1,height:36,border:`1px solid ${hairlineStrong}`,borderRadius:R,background:paper,padding:'0 12px',fontSize:13,color:ink,outline:'none'}}/>
+                <Btn onClick={addContent} icon="plus">Add</Btn>
+              </div>
+            </Card>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── REDEEM ─────────────────────────────────────────────── */
+function RedeemPage({toast}){
+  const [code,setCode]=useState('');
+  const [result,setResult]=useState(null);
+  const [amount,setAmount]=useState('');
+  const lookup=()=>{
+    const found=SALES.find(s=>s.card_code?.toLowerCase()===code.trim().toLowerCase());
+    if(!found){toast('Card not found — check the code and try again','error');setResult(null);return;}
+    setResult(found);setAmount('');
+  };
+  const redeem=()=>{
+    const cents=Math.round(parseFloat(amount)*100);
+    const rem=result.amount_cents-result.redeemed_cents;
+    if(!cents||cents<=0){toast('Enter an amount to redeem','error');return;}
+    if(cents>rem){toast(`Amount exceeds remaining balance (${fmt$(rem)})`,'error');return;}
+    toast(`Redeemed ${fmt$(cents)} from card ${result.card_code}`);
+    setResult(null);setCode('');setAmount('');
+  };
+  return(
+    <Shell title="Redeem" subtitle="Look up a gift card by code and record a redemption.">
+      <div style={{maxWidth:480}}>
+        <div style={{display:'flex',gap:8}}>
+          <input value={code} onChange={e=>setCode(e.target.value)} placeholder="e.g. XG-4821" onKeyDown={e=>e.key==='Enter'&&lookup()}
+            style={{flex:1,height:44,border:`1px solid ${hairlineStrong}`,borderRadius:R,background:paper,padding:'0 12px',fontSize:15,color:ink,outline:'none',fontFamily:'ui-monospace,monospace'}}/>
+          <Btn primary onClick={lookup}>Look up</Btn>
+        </div>
+        <p style={{marginTop:8,fontSize:12,color:inkMuted}}>Try: XG-4821, XG-2291, XG-5511, XG-9042</p>
+        {result&&(
+          <div style={{marginTop:24,border:`1px solid ${hairline}`,borderRadius:R,background:paper,padding:24}}>
+            <p style={{fontSize:12,textTransform:'uppercase',letterSpacing:'0.14em',color:inkMuted}}>Card found</p>
+            <p style={{fontSize:20,fontFamily:'Fraunces,Georgia,serif',color:ink,marginTop:8}}>{result.card_code}</p>
+            <div style={{marginTop:16,display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
+              <Stat label="Product" value={result.product_name}/>
+              <Stat label="Remaining" value={fmt$(result.amount_cents-result.redeemed_cents)} big emeraldColor/>
+              <Stat label="Buyer" value={result.buyer_name||'—'}/>
+              <Stat label="Status" value={result.status.replace('_',' ')}/>
+            </div>
+            {(result.amount_cents-result.redeemed_cents)>0&&(
+              <div style={{marginTop:20,display:'flex',gap:8}}>
+                <input type="number" step="0.01" min="0" placeholder="Amount ($)" value={amount} onChange={e=>setAmount(e.target.value)}
+                  style={{flex:1,height:40,border:`1px solid ${hairlineStrong}`,borderRadius:R,background:paper,padding:'0 12px',fontSize:14,color:ink,outline:'none'}}/>
+                <Btn primary onClick={redeem}>Redeem</Btn>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </Shell>
+  );
+}
+
+/* ── TEMPLATES ──────────────────────────────────────────── */
+function TemplatesPage(){
+  const templates=[
+    {name:'Holiday Gift Promo',tags:['seasonal','promo'],updated:'2025-12-01'},
+    {name:"Mother's Day Campaign",tags:['seasonal'],updated:'2025-04-30'},
+    {name:'Re-engagement — Lapsed buyers',tags:['retention'],updated:'2026-01-10'},
+    {name:'Post-purchase Thank You',tags:['transactional'],updated:'2026-02-14'},
+    {name:'New arrival / bundle launch',tags:['launch'],updated:'2026-03-05'},
+  ];
+  return(
+    <Shell title="Templates" subtitle="Reusable email templates managed by the Xperigift team.">
+      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(260px,1fr))',gap:16}}>
+        {templates.map(tp=>(
+          <Card key={tp.name}>
+            <div style={{height:72,background:paperSoft,borderRadius:R,marginBottom:16,display:'flex',alignItems:'center',justifyContent:'center'}}>
+              <Icon name="mail" size={24} color={hairlineStrong}/>
+            </div>
+            <h3 style={{fontSize:17,color:ink}}>{tp.name}</h3>
+            <div style={{display:'flex',gap:6,marginTop:8,flexWrap:'wrap'}}>
+              {tp.tags.map(tag=><span key={tag} style={{fontSize:11,padding:'2px 8px',background:paperSoft,borderRadius:9999,color:inkMuted}}>{tag}</span>)}
+            </div>
+            <p style={{fontSize:12,color:inkMuted,marginTop:10}}>Updated {fmtDate(tp.updated)}</p>
+          </Card>
+        ))}
+      </div>
+    </Shell>
+  );
+}
+
+/* ── ADMIN ──────────────────────────────────────────────── */
+function AdminClientsPage(){
+  return(
+    <Shell title="Clients">
+      <TableWrap>
+        <thead><THead cols={['Name','Industry','Status']}/></thead>
+        <tbody>
+          {[{name:'Serenity Day Spa',industry:'Spa',active:true},{name:'The Fork & Barrel',industry:'Restaurant',active:true},{name:'Oakwood Golf Club',industry:'Golf',active:false}].map(c=>(
+            <tr key={c.name} style={{borderBottom:`1px solid ${hairline}`}}>
+              <TD bold>{c.name}</TD><TD muted>{c.industry}</TD>
+              <TD><span style={{fontSize:12,fontWeight:500,color:c.active?emeraldDeep:inkMuted}}>{c.active?'Active':'Inactive'}</span></TD>
+            </tr>
+          ))}
+        </tbody>
+      </TableWrap>
+    </Shell>
+  );
+}
+function AdminBookingsPage(){
+  return(
+    <Shell title="Audit bookings">
+      <TableWrap>
+        <thead><THead cols={['Name','Business','Date','Status']}/></thead>
+        <tbody>
+          {[{name:'Maria G.',biz:'Glow Esthetics',date:'2026-04-22',status:'confirmed'},{name:'Trevor A.',biz:'River Bend Grille',date:'2026-04-24',status:'pending'},{name:'Yuki M.',biz:'Fairways Golf',date:'2026-04-28',status:'pending'}].map(b=>(
+            <tr key={b.name} style={{borderBottom:`1px solid ${hairline}`}}>
+              <TD bold>{b.name}</TD><TD>{b.biz}</TD><TD muted>{fmtDate(b.date)}</TD>
+              <TD><span style={{fontSize:12,fontWeight:500,color:b.status==='confirmed'?emeraldDeep:inkMuted,textTransform:'capitalize'}}>{b.status}</span></TD>
+            </tr>
+          ))}
+        </tbody>
+      </TableWrap>
+    </Shell>
+  );
+}
+
+/* ── PRIMITIVES ─────────────────────────────────────────── */
+function Shell({title,subtitle,actions,children}){
+  return(
+    <div className="fade-up" style={{maxWidth:1200,margin:'0 auto',padding:'40px 32px'}}>
+      <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',marginBottom:32,gap:16,flexWrap:'wrap'}}>
+        <div><h1 style={{fontSize:32,fontWeight:400,color:ink}}>{title}</h1>{subtitle&&<p style={{marginTop:4,fontSize:14,color:inkMuted}}>{subtitle}</p>}</div>
+        {actions&&<div style={{display:'flex',gap:8,flexWrap:'wrap'}}>{actions}</div>}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function KpiCard({label,value,hint,tone='default',icon}){
+  const tones={
+    default:{border:`1px solid ${hairline}`,background:paper,lc:inkMuted,vc:ink,hc:inkMuted},
+    emerald:{border:`1px solid oklch(0.42 0.09 165 / 0.3)`,background:emeraldSoft,lc:emeraldDeep,vc:emeraldDeep,hc:emeraldDeep},
+    ink:{border:`1px solid ${ink}`,background:ink,lc:'oklch(1 0 0 / 0.7)',vc:paper,hc:'oklch(1 0 0 / 0.6)'},
+    sky:{border:'1px solid var(--sky-border)',background:'var(--sky)',lc:'var(--sky-text)',vc:'var(--sky-text)',hc:'var(--sky-text)'},
+  };
+  const c=tones[tone]||tones.default;
+  return(
+    <div style={{borderRadius:R,padding:20,border:c.border,background:c.background}}>
+      <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between'}}>
+        <p style={{fontSize:12,textTransform:'uppercase',letterSpacing:'0.14em',color:c.lc}}>{label}</p>
+        {icon&&<span style={{color:c.vc}}><Icon name={icon} size={16}/></span>}
+      </div>
+      <p style={{marginTop:12,fontFamily:'Fraunces,Georgia,serif',fontSize:28,lineHeight:1,color:c.vc}}>{value}</p>
+      {hint&&<p style={{marginTop:8,fontSize:12,color:c.hc}}>{hint}</p>}
+    </div>
+  );
+}
+
+function Btn({children,icon,primary,disabled,onClick,type='button',fullWidth}){
+  return(
+    <button type={type} disabled={disabled} onClick={onClick}
+      style={{height:primary&&fullWidth?44:primary?40:36,padding:fullWidth?'0':'0 12px',width:fullWidth?'100%':undefined,display:'inline-flex',alignItems:'center',justifyContent:'center',gap:8,borderRadius:R,border:primary?'none':`1px solid ${hairlineStrong}`,background:primary?ink:paper,color:primary?paper:ink,fontSize:13,fontWeight:primary?500:400,cursor:disabled?'not-allowed':'pointer',opacity:disabled?0.4:1,transition:'opacity 0.1s'}}>
+      {icon&&<Icon name={icon} size={13}/>}{children}
+    </button>
+  );
+}
+
+function Field({label,children}){return <div><label style={{display:'block',fontSize:13,fontWeight:500,color:ink,marginBottom:6}}>{label}</label>{children}</div>;}
+function Card({children,style={}}){return <div style={{border:`1px solid ${hairline}`,borderRadius:R,background:paper,padding:24,...style}}>{children}</div>;}
+function TableWrap({children,style={}}){return <div style={{border:`1px solid ${hairline}`,borderRadius:R,background:paper,overflow:'hidden',...style}}><table style={{width:'100%',fontSize:14,borderCollapse:'collapse'}}>{children}</table></div>;}
+function THead({cols}){return <tr style={{borderBottom:`1px solid ${hairline}`,background:paperSoft}}>{cols.map(h=><th key={h} style={{padding:'10px 16px',textAlign:'left',fontSize:12,textTransform:'uppercase',letterSpacing:'0.06em',color:inkMuted,fontWeight:500}}>{h}</th>)}</tr>;}
+function TD({children,muted,bold,right}){return <td style={{padding:'12px 16px',color:muted?inkSoft:ink,fontWeight:bold?500:400,textAlign:right?'right':'left'}}>{children}</td>;}
+function StatusBadge({s}){return <span style={{display:'inline-flex',alignItems:'center',height:24,padding:'0 8px',borderRadius:R,background:paperSoft,fontSize:12,color:inkSoft,textTransform:'capitalize'}}>{s}</span>;}
+function Stat({label,value,big,emeraldColor}){return <div><p style={{fontSize:12,color:inkMuted}}>{label}</p><p style={{marginTop:2,fontSize:big?22:14,fontFamily:big?'Fraunces,Georgia,serif':undefined,color:emeraldColor?emeraldDeep:big?ink:inkSoft,fontWeight:big?400:500}}>{value}</p></div>;}
+function LogoMark(){return <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{fontFamily:'Fraunces,Georgia,serif',fontSize:20,fontWeight:600,letterSpacing:'-0.02em',color:ink,lineHeight:1}}>xperigift</span><span style={{width:6,height:6,borderRadius:'50%',background:emerald}}/></div>;}
+function LoadSpinner(){return <svg className="spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"/></svg>;}
+function TweaksPanel(){return <div style={{position:'fixed',bottom:24,right:24,zIndex:9999,width:256,background:paper,border:`1px solid ${hairlineStrong}`,borderRadius:R,boxShadow:'0 4px 24px oklch(0 0 0 / 0.08)',padding:20}}><p style={{fontSize:13,fontWeight:600,color:ink,marginBottom:12}}>Tweaks</p><p style={{fontSize:12,color:inkMuted,lineHeight:1.5}}>Use any email + password ≥ 10 chars to log in.<br/><br/>All data is local — changes persist in the session but don't hit Supabase.</p></div>;}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

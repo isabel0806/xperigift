@@ -13,7 +13,7 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-hairline bg-paper/85 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-5 sm:px-8">
+      <div className="mx-auto flex h-16 max-w-[1100px] items-center justify-between px-6 sm:px-10">
         <Link to="/" className="flex items-center gap-2" onClick={() => setOpen(false)}>
           <span className="font-display text-[22px] font-semibold tracking-tight text-ink leading-none lowercase">
             xperigift
@@ -60,7 +60,7 @@ export function SiteHeader() {
 
       {open && (
         <div className="md:hidden border-t border-hairline bg-paper">
-          <nav className="mx-auto flex max-w-[1200px] flex-col px-5 py-4 gap-1">
+          <nav className="mx-auto flex max-w-[1100px] flex-col px-6 py-4 gap-1">
             {navLinks.map((l) => (
               <Link
                 key={l.to}

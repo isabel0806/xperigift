@@ -63,7 +63,7 @@ export default function IndustriesPage() {
   return (
     <SiteShell>
       <section className="border-b border-hairline">
-        <div className="mx-auto max-w-[1200px] px-5 sm:px-8 pt-20 sm:pt-28 pb-16 sm:pb-20">
+        <div className="mx-auto max-w-[1200px] px-6 sm:px-10 pt-20 sm:pt-28 pb-16 sm:pb-20">
           <div className="max-w-[820px]">
             <Eyebrow>Industries</Eyebrow>
             <h1 className="mt-6 font-display text-[44px] sm:text-[60px] lg:text-[72px] leading-[1] text-ink">
@@ -88,7 +88,7 @@ export default function IndustriesPage() {
       {industries.map((i, idx) => (
         <section key={i.id} id={i.id}
           className={`border-b border-hairline scroll-mt-24 ${idx % 2 === 1 ? 'bg-paper-soft' : ''}`}>
-          <div className="mx-auto max-w-[1100px] px-5 sm:px-8 py-20 sm:py-28">
+          <div className="mx-auto max-w-[1100px] px-6 sm:px-10 py-16 sm:py-24">
             <div className="grid gap-12 md:grid-cols-12">
               <div className="md:col-span-4">
                 <div className="inline-flex h-12 w-12 items-center justify-center rounded-sm bg-emerald-soft">
@@ -108,7 +108,7 @@ export default function IndustriesPage() {
       ))}
 
       <section className="bg-ink text-paper">
-        <div className="mx-auto max-w-[1100px] px-5 sm:px-8 py-20 sm:py-28 text-center">
+        <div className="mx-auto max-w-[1100px] px-6 sm:px-10 py-16 sm:py-24 text-center">
           <h2 className="font-display text-[34px] sm:text-[48px] leading-[1.05] max-w-[700px] mx-auto">
             Don't see your vertical? Talk to us.
           </h2>

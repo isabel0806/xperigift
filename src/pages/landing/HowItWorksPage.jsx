@@ -55,13 +55,13 @@ export default function HowItWorksPage() {
   return (
     <SiteShell>
       <section className="border-b border-hairline">
-        <div className="mx-auto max-w-[1200px] px-5 sm:px-8 pt-20 sm:pt-28 pb-16 sm:pb-20">
-          <div className="max-w-[800px]">
+        <div className="mx-auto max-w-[1100px] px-6 sm:px-10 pt-20 sm:pt-28 pb-14 sm:pb-20">
+          <div className="max-w-[700px]">
             <Eyebrow>How it works</Eyebrow>
-            <h1 className="mt-6 font-display text-[44px] sm:text-[60px] lg:text-[72px] leading-[1] text-ink">
+            <h1 className="mt-5 font-display text-[38px] sm:text-[54px] lg:text-[64px] leading-[1.02] text-ink">
               A clear path from program to <span className="italic text-emerald-deep">revenue</span>.
             </h1>
-            <p className="mt-7 max-w-[640px] text-[17px] sm:text-[19px] text-ink-soft leading-relaxed">
+            <p className="mt-6 max-w-[560px] text-[16px] sm:text-[18px] text-ink-soft leading-relaxed">
               No long onboarding. No platform to learn. We diagnose, plan, and run a 90-day gift card revenue cycle alongside your team — then keep iterating.
             </p>
           </div>
@@ -69,7 +69,7 @@ export default function HowItWorksPage() {
       </section>
 
       <section className="border-b border-hairline">
-        <div className="mx-auto max-w-[1100px] px-5 sm:px-8 py-20 sm:py-28">
+        <div className="mx-auto max-w-[1100px] px-6 sm:px-10 py-16 sm:py-24">
           <ol className="space-y-px bg-hairline border border-hairline">
             {steps.map((s) => (
               <li key={s.n} className="bg-paper">
@@ -105,7 +105,7 @@ export default function HowItWorksPage() {
       </section>
 
       <section className="bg-ink text-paper">
-        <div className="mx-auto max-w-[1100px] px-5 sm:px-8 py-20 sm:py-28 text-center">
+        <div className="mx-auto max-w-[1100px] px-6 sm:px-10 py-16 sm:py-24 text-center">
           <h2 className="font-display text-[34px] sm:text-[48px] leading-[1.05] max-w-[760px] mx-auto">
             Ready to see what your program could do?
           </h2>
