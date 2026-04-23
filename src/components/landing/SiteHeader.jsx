@@ -39,13 +39,12 @@ export function SiteHeader() {
           <Link to="/portal" className="text-[14px] text-ink-soft hover:text-ink transition-colors">
             Client sign in
           </Link>
-          <a
-            href="https://calendly.com/isabel-thegiftcardcafe/30min"
-            target="_blank" rel="noopener noreferrer"
+          <Link
+            to="/book-audit"
             className="inline-flex h-10 items-center rounded-sm bg-xg-terracotta px-5 text-[14px] font-medium text-white transition-colors hover:bg-xg-terracotta-dark"
           >
             Book your audit
-          </a>
+          </Link>
         </div>
 
         <button
@@ -79,14 +78,13 @@ export function SiteHeader() {
             >
               Client sign in
             </Link>
-            <a
-              href="https://calendly.com/isabel-thegiftcardcafe/30min"
-              target="_blank" rel="noopener noreferrer"
+            <Link
+              to="/book-audit"
               className="mt-2 inline-flex h-11 items-center justify-center rounded-sm bg-ink px-5 text-[14px] font-medium text-paper"
               onClick={() => setOpen(false)}
             >
               Book your audit
-            </a>
+            </Link>
           </nav>
         </div>
       )}

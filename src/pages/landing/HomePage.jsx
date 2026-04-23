@@ -69,15 +69,15 @@ export default function HomePage() {
             Xperigift manages your entire gift card revenue channel — strategy, campaigns, and reporting — so you don't have to.
           </p>
           <div className="mt-9 flex flex-wrap gap-3">
-            <CTALink to="https://calendly.com/isabel-thegiftcardcafe/30min" size="lg">Book a free audit</CTALink>
+            <CTALink to="/book-audit" size="lg">Book a free audit</CTALink>
             <CTALink to="/how-it-works" variant="outline" size="lg">See how it works</CTALink>
           </div>
         </div>
       </section>
 
       {/* ── Marquee strip ── */}
-      <div className="border-b border-hairline bg-xg-bordo overflow-hidden">
-        <div className="flex gap-10 px-6 sm:px-10 py-4 text-[11px] uppercase tracking-[0.18em] text-xg-cream whitespace-nowrap">
+      <div className="border-b border-hairline bg-paper-soft overflow-hidden">
+        <div className="flex gap-10 px-6 sm:px-10 py-4 text-[11px] uppercase tracking-[0.18em] text-ink-muted whitespace-nowrap">
           {['Built for operators', 'No platform to learn', 'Year-round revenue', 'Done with you', 'US SMBs only', '90-day cycles', 'Pre-paid revenue', 'Free audit to start'].map((t, i) => (
             <span key={i}>{t}</span>
           ))}
@@ -289,16 +289,16 @@ export default function HomePage() {
       </section>
 
       {/* ── Final CTA ── */}
-      <section className="bg-ink text-paper">
+      <section className="bg-xg-cream">
         <div className="mx-auto max-w-[1100px] px-6 sm:px-10 py-16 sm:py-28 text-center">
-          <h2 className="font-display text-[34px] sm:text-[48px] leading-[1.05] max-w-[640px] mx-auto">
+          <h2 className="font-display text-[34px] sm:text-[48px] leading-[1.05] max-w-[640px] mx-auto text-xg-bordo">
             Find out what your gift card program is leaving behind.
           </h2>
-          <p className="mt-5 max-w-[420px] mx-auto text-[15px] leading-relaxed" style={{ color: 'oklch(0.985 0.005 85 / 0.6)' }}>
+          <p className="mt-5 max-w-[420px] mx-auto text-[15px] leading-relaxed text-ink-soft">
             Thirty minutes. No pitch. Two to three specific revenue opportunities you can act on immediately.
           </p>
           <div className="mt-9 flex flex-wrap gap-3 justify-center">
-            <CTALink to="https://calendly.com/isabel-thegiftcardcafe/30min" size="lg" className="bg-xg-terracotta hover:bg-xg-terracotta-dark text-white">
+            <CTALink to="/book-audit" size="lg">
               Book your free audit
             </CTALink>
           </div>

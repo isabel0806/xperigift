@@ -110,7 +110,7 @@ export default function HowItWorksPage() {
             Ready to see what your program could do?
           </h2>
           <div className="mt-9 flex justify-center">
-            <CTALink to="https://calendly.com/isabel-thegiftcardcafe/30min" size="lg" className="bg-xg-terracotta hover:bg-xg-terracotta-dark text-white">
+            <CTALink to="/book-audit" size="lg" className="bg-xg-terracotta hover:bg-xg-terracotta-dark text-white">
               Book your free audit
             </CTALink>
           </div>

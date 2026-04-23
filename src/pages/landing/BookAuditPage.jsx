@@ -1,7 +1,16 @@
+import { useEffect } from 'react';
 import { SiteShell } from '../../components/landing/SiteShell';
 import { Eyebrow } from '../../components/landing/Eyebrow';
 
 export default function BookAuditPage() {
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://assets.calendly.com/assets/external/widget.js';
+    script.async = true;
+    document.body.appendChild(script);
+    return () => { document.body.removeChild(script); };
+  }, []);
+
   return (
     <SiteShell>
       <section className="border-b border-hairline">
@@ -20,12 +29,10 @@ export default function BookAuditPage() {
 
       <section className="border-b border-hairline">
         <div className="mx-auto max-w-[1100px] px-6 sm:px-10 py-10 sm:py-14">
-          <iframe
-            src="https://calendly.com/isabel-thegiftcardcafe/30min"
-            width="100%"
-            height="700"
-            frameBorder="0"
-            title="Book a free audit"
+          <div
+            className="calendly-inline-widget"
+            data-url="https://calendly.com/isabel-thegiftcardcafe/30min"
+            style={{ minWidth: '320px', height: '700px' }}
           />
         </div>
       </section>
