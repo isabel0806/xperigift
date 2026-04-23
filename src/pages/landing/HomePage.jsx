@@ -77,9 +77,16 @@ export default function HomePage() {
 
       {/* ── Marquee strip ── */}
       <div className="border-b border-hairline bg-paper-soft overflow-hidden">
-        <div className="flex gap-10 px-6 sm:px-10 py-4 text-[11px] uppercase tracking-[0.18em] text-ink-muted whitespace-nowrap">
-          {['Built for operators', 'No platform to learn', 'Year-round revenue', 'Done with you', 'US SMBs only', '90-day cycles', 'Pre-paid revenue', 'Free audit to start'].map((t, i) => (
-            <span key={i}>{t}</span>
+        <div className="flex animate-marquee">
+          {[...Array(2)].map((_, rep) => (
+            <div key={rep} className="flex gap-10 px-6 py-4 text-[11px] uppercase tracking-[0.18em] text-ink-muted whitespace-nowrap shrink-0">
+              {['Built for operators', 'No platform to learn', 'Year-round revenue', 'Done with you', 'US SMBs only', '90-day cycles', 'Pre-paid revenue', 'Free audit to start'].map((t, i) => (
+                <span key={i} className="flex items-center gap-10">
+                  {t}
+                  {i < 7 && <span className="opacity-30">·</span>}
+                </span>
+              ))}
+            </div>
           ))}
         </div>
       </div>
