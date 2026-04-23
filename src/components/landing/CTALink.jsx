@@ -8,8 +8,8 @@ export function CTALink({ to, children, size = 'md', variant = 'solid', withArro
     lg: 'h-12 px-7 text-[15px]',
   };
   const variants = {
-    solid: 'bg-ink text-paper hover:bg-ink-soft',
-    outline: 'border border-hairline-strong text-ink hover:border-ink',
+    solid: 'bg-xg-terracotta text-white hover:bg-xg-terracotta-dark',
+    outline: 'border border-xg-teal text-xg-teal hover:border-xg-teal-dark hover:text-xg-teal-dark',
     ghost: 'text-ink-soft hover:text-ink',
   };
 

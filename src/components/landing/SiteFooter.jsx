@@ -50,7 +50,7 @@ export function SiteFooter() {
             <a
               href="https://calendly.com/isabel-thegiftcardcafe/30min"
               target="_blank" rel="noopener noreferrer"
-              className="mt-5 inline-flex h-10 items-center rounded-sm bg-ink px-5 text-[14px] font-medium text-paper hover:bg-ink-soft"
+              className="mt-5 inline-flex h-10 items-center rounded-sm bg-xg-terracotta px-5 text-[14px] font-medium text-white hover:bg-xg-terracotta-dark"
             >
               Book your audit
             </a>

@@ -12,7 +12,7 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-hairline bg-paper/85 backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-hairline bg-xg-cream/85 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-[1100px] items-center justify-between px-6 sm:px-10">
         <Link to="/" className="flex items-center gap-2" onClick={() => setOpen(false)}>
           <span className="font-display text-[22px] font-semibold tracking-tight text-ink leading-none lowercase">
@@ -42,7 +42,7 @@ export function SiteHeader() {
           <a
             href="https://calendly.com/isabel-thegiftcardcafe/30min"
             target="_blank" rel="noopener noreferrer"
-            className="inline-flex h-10 items-center rounded-sm bg-ink px-5 text-[14px] font-medium text-paper transition-colors hover:bg-ink-soft"
+            className="inline-flex h-10 items-center rounded-sm bg-xg-terracotta px-5 text-[14px] font-medium text-white transition-colors hover:bg-xg-terracotta-dark"
           >
             Book your audit
           </a>

@@ -8,7 +8,7 @@ export default function BookAuditPage() {
         <div className="mx-auto max-w-[1100px] px-6 sm:px-10 pt-20 sm:pt-28 pb-12">
           <div className="max-w-[640px]">
             <Eyebrow>Free audit</Eyebrow>
-            <h1 className="mt-5 font-display text-[38px] sm:text-[54px] leading-[1.02] text-ink">
+            <h1 className="mt-5 font-display text-[38px] sm:text-[54px] leading-[1.02] text-xg-bordo">
               Book your 30-minute audit.
             </h1>
             <p className="mt-5 text-[16px] text-ink-soft leading-relaxed">

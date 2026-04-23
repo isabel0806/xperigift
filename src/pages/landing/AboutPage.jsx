@@ -17,7 +17,7 @@ export default function AboutPage() {
         <div className="mx-auto max-w-[1200px] px-6 sm:px-10 pt-20 sm:pt-28 pb-16 sm:pb-20">
           <div className="max-w-[820px]">
             <Eyebrow>About Xperigift</Eyebrow>
-            <h1 className="mt-6 font-display text-[44px] sm:text-[60px] lg:text-[72px] leading-[1] text-ink">
+            <h1 className="mt-6 font-display text-[44px] sm:text-[60px] lg:text-[72px] leading-[1] text-xg-bordo">
               Built by operators. For operators.
             </h1>
             <p className="mt-7 max-w-[640px] text-[17px] sm:text-[19px] text-ink-soft leading-relaxed">
@@ -32,7 +32,7 @@ export default function AboutPage() {
           <div className="grid gap-12 md:grid-cols-12">
             <div className="md:col-span-5">
               <Eyebrow>Why we exist</Eyebrow>
-              <h2 className="mt-5 font-display text-[34px] sm:text-[40px] leading-[1.05] text-ink">
+              <h2 className="mt-5 font-display text-[34px] sm:text-[40px] leading-[1.05] text-xg-bordo">
                 Most SMBs don't need another tool.
               </h2>
             </div>
@@ -54,14 +54,14 @@ export default function AboutPage() {
       <section className="border-b border-hairline bg-paper-soft">
         <div className="mx-auto max-w-[1200px] px-6 sm:px-10 py-16 sm:py-24">
           <Eyebrow>How we work</Eyebrow>
-          <h2 className="mt-5 font-display text-[34px] sm:text-[44px] leading-[1.05] text-ink max-w-[700px]">
+          <h2 className="mt-5 font-display text-[34px] sm:text-[44px] leading-[1.05] text-xg-bordo max-w-[700px]">
             Four principles that shape every engagement.
           </h2>
           <div className="mt-12 grid gap-px bg-hairline border border-hairline sm:grid-cols-2">
             {principles.map((p) => (
               <div key={p.title} className="bg-paper p-8">
                 <p.icon className="h-5 w-5 text-emerald" />
-                <h3 className="mt-5 font-display text-[24px] text-ink">{p.title}</h3>
+                <h3 className="mt-5 font-display text-[24px] text-xg-bordo">{p.title}</h3>
                 <p className="mt-3 text-[15px] text-ink-soft leading-relaxed">{p.body}</p>
               </div>
             ))}
@@ -74,7 +74,7 @@ export default function AboutPage() {
           <div className="grid gap-12 md:grid-cols-12">
             <div className="md:col-span-5">
               <Eyebrow>Infrastructure</Eyebrow>
-              <h2 className="mt-5 font-display text-[34px] sm:text-[40px] leading-[1.05] text-ink">
+              <h2 className="mt-5 font-display text-[34px] sm:text-[40px] leading-[1.05] text-xg-bordo">
                 Powered by a proven platform.
               </h2>
             </div>
@@ -104,7 +104,7 @@ export default function AboutPage() {
             Thirty minutes. No deck. Just a working conversation about your business and what's possible.
           </p>
           <div className="mt-9 flex justify-center">
-            <CTALink to="https://calendly.com/isabel-thegiftcardcafe/30min" size="lg" className="bg-emerald hover:bg-emerald-deep text-paper">
+            <CTALink to="https://calendly.com/isabel-thegiftcardcafe/30min" size="lg" className="bg-xg-terracotta hover:bg-xg-terracotta-dark text-white">
               Book your free audit
             </CTALink>
           </div>

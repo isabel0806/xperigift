@@ -66,7 +66,7 @@ export default function IndustriesPage() {
         <div className="mx-auto max-w-[1200px] px-6 sm:px-10 pt-20 sm:pt-28 pb-16 sm:pb-20">
           <div className="max-w-[820px]">
             <Eyebrow>Industries</Eyebrow>
-            <h1 className="mt-6 font-display text-[44px] sm:text-[60px] lg:text-[72px] leading-[1] text-ink">
+            <h1 className="mt-6 font-display text-[44px] sm:text-[60px] lg:text-[72px] leading-[1] text-xg-bordo">
               Vertical-specific. Operator-led.
             </h1>
             <p className="mt-7 max-w-[640px] text-[17px] sm:text-[19px] text-ink-soft leading-relaxed">
@@ -94,7 +94,7 @@ export default function IndustriesPage() {
                 <div className="inline-flex h-12 w-12 items-center justify-center rounded-sm bg-emerald-soft">
                   <i.icon className="h-6 w-6 text-emerald-deep" />
                 </div>
-                <h2 className="mt-6 font-display text-[34px] sm:text-[44px] leading-[1.05] text-ink">{i.name}</h2>
+                <h2 className="mt-6 font-display text-[34px] sm:text-[44px] leading-[1.05] text-xg-bordo">{i.name}</h2>
                 <p className="mt-4 text-[16px] text-ink-soft leading-relaxed">{i.intro}</p>
               </div>
               <div className="md:col-span-8 grid gap-px bg-hairline border border-hairline">
@@ -116,7 +116,7 @@ export default function IndustriesPage() {
             If you're a service-led SMB doing $150k–$2M in revenue, the same playbook usually applies. The audit will tell us quickly.
           </p>
           <div className="mt-9 flex justify-center">
-            <CTALink to="https://calendly.com/isabel-thegiftcardcafe/30min" size="lg" className="bg-emerald hover:bg-emerald-deep text-paper">
+            <CTALink to="https://calendly.com/isabel-thegiftcardcafe/30min" size="lg" className="bg-xg-terracotta hover:bg-xg-terracotta-dark text-white">
               Book your free audit
             </CTALink>
           </div>

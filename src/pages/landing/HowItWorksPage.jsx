@@ -58,7 +58,7 @@ export default function HowItWorksPage() {
         <div className="mx-auto max-w-[1100px] px-6 sm:px-10 pt-20 sm:pt-28 pb-14 sm:pb-20">
           <div className="max-w-[700px]">
             <Eyebrow>How it works</Eyebrow>
-            <h1 className="mt-5 font-display text-[38px] sm:text-[54px] lg:text-[64px] leading-[1.02] text-ink">
+            <h1 className="mt-5 font-display text-[38px] sm:text-[54px] lg:text-[64px] leading-[1.02] text-xg-bordo">
               A clear path from program to <span className="italic text-emerald-deep">revenue</span>.
             </h1>
             <p className="mt-6 max-w-[560px] text-[16px] sm:text-[18px] text-ink-soft leading-relaxed">
@@ -81,7 +81,7 @@ export default function HowItWorksPage() {
                     </div>
                   </div>
                   <div className="md:col-span-9">
-                    <h2 className="font-display text-[28px] sm:text-[34px] text-ink leading-tight">{s.title}</h2>
+                    <h2 className="font-display text-[28px] sm:text-[34px] text-xg-bordo leading-tight">{s.title}</h2>
                     <p className="mt-3 text-[16px] text-ink-soft leading-relaxed max-w-[640px]">{s.summary}</p>
                     <ul className="mt-6 space-y-3">
                       {s.bullets.map((b) => (
@@ -110,7 +110,7 @@ export default function HowItWorksPage() {
             Ready to see what your program could do?
           </h2>
           <div className="mt-9 flex justify-center">
-            <CTALink to="https://calendly.com/isabel-thegiftcardcafe/30min" size="lg" className="bg-emerald hover:bg-emerald-deep text-paper">
+            <CTALink to="https://calendly.com/isabel-thegiftcardcafe/30min" size="lg" className="bg-xg-terracotta hover:bg-xg-terracotta-dark text-white">
               Book your free audit
             </CTALink>
           </div>

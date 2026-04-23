@@ -62,7 +62,7 @@ export default function HomePage() {
       <section className="border-b border-hairline">
         <div className="mx-auto max-w-[1100px] px-6 sm:px-10 pt-20 sm:pt-28 pb-16 sm:pb-24">
           <Eyebrow>Gift card revenue management</Eyebrow>
-          <h1 className="mt-5 font-display text-[42px] sm:text-[60px] lg:text-[72px] leading-[1.02] text-ink max-w-[720px]">
+          <h1 className="mt-5 font-display text-[42px] sm:text-[60px] lg:text-[72px] leading-[1.02] text-xg-bordo max-w-[720px]">
             Your gift cards should be earning more.
           </h1>
           <p className="mt-6 max-w-[500px] text-[17px] text-ink-soft leading-relaxed">
@@ -88,7 +88,7 @@ export default function HomePage() {
       <section className="border-b border-hairline">
         <div className="mx-auto max-w-[1100px] px-6 sm:px-10 py-16 sm:py-24">
           <Eyebrow>The problem</Eyebrow>
-          <h2 className="mt-5 font-display text-[32px] sm:text-[44px] leading-[1.05] text-ink max-w-[580px] mb-12">
+          <h2 className="mt-5 font-display text-[32px] sm:text-[44px] leading-[1.05] text-xg-bordo max-w-[580px] mb-12">
             Most gift card programs leave money on the table.
           </h2>
           <div className="grid sm:grid-cols-3 border border-hairline divide-y sm:divide-y-0 sm:divide-x divide-hairline">
@@ -110,7 +110,7 @@ export default function HomePage() {
       <section className="border-b border-hairline bg-paper-soft">
         <div className="mx-auto max-w-[1100px] px-6 sm:px-10 py-16 sm:py-24">
           <Eyebrow>The solution</Eyebrow>
-          <h2 className="mt-5 font-display text-[32px] sm:text-[44px] leading-[1.05] text-ink max-w-[580px] mb-12">
+          <h2 className="mt-5 font-display text-[32px] sm:text-[44px] leading-[1.05] text-xg-bordo max-w-[580px] mb-12">
             A managed channel, not another tool.
           </h2>
           <div className="grid sm:grid-cols-2 border border-hairline divide-y sm:divide-y-0 divide-hairline">
@@ -118,7 +118,7 @@ export default function HomePage() {
               {PILLARS.slice(0, 2).map((p) => (
                 <div key={p.title} className="p-7 sm:p-8 bg-paper">
                   <p.icon className="h-5 w-5 text-emerald mb-4" />
-                  <h3 className="font-display text-[20px] text-ink mb-2">{p.title}</h3>
+                  <h3 className="font-display text-[20px] text-xg-bordo mb-2">{p.title}</h3>
                   <p className="text-[15px] text-ink-soft leading-relaxed">{p.body}</p>
                 </div>
               ))}
@@ -127,7 +127,7 @@ export default function HomePage() {
               {PILLARS.slice(2).map((p) => (
                 <div key={p.title} className="p-7 sm:p-8 bg-paper">
                   <p.icon className="h-5 w-5 text-emerald mb-4" />
-                  <h3 className="font-display text-[20px] text-ink mb-2">{p.title}</h3>
+                  <h3 className="font-display text-[20px] text-xg-bordo mb-2">{p.title}</h3>
                   <p className="text-[15px] text-ink-soft leading-relaxed">{p.body}</p>
                 </div>
               ))}
@@ -140,7 +140,7 @@ export default function HomePage() {
       <section className="border-b border-hairline">
         <div className="mx-auto max-w-[1100px] px-6 sm:px-10 py-16 sm:py-24">
           <Eyebrow>How it works</Eyebrow>
-          <h2 className="mt-5 font-display text-[32px] sm:text-[44px] leading-[1.05] text-ink max-w-[500px] mb-12">
+          <h2 className="mt-5 font-display text-[32px] sm:text-[44px] leading-[1.05] text-xg-bordo max-w-[500px] mb-12">
             From audit to revenue in 90 days.
           </h2>
           <ol className="grid sm:grid-cols-2 border border-hairline divide-y sm:divide-y-0 divide-hairline">
@@ -151,7 +151,7 @@ export default function HomePage() {
                   <div className="mt-3 mb-4 inline-flex h-9 w-9 items-center justify-center rounded-sm bg-emerald-soft">
                     <s.icon className="h-4 w-4 text-emerald-deep" />
                   </div>
-                  <h3 className="font-display text-[20px] text-ink mb-2">{s.title}</h3>
+                  <h3 className="font-display text-[20px] text-xg-bordo mb-2">{s.title}</h3>
                   <p className="text-[15px] text-ink-soft leading-relaxed">{s.body}</p>
                 </li>
               ))}
@@ -163,7 +163,7 @@ export default function HomePage() {
                   <div className="mt-3 mb-4 inline-flex h-9 w-9 items-center justify-center rounded-sm bg-emerald-soft">
                     <s.icon className="h-4 w-4 text-emerald-deep" />
                   </div>
-                  <h3 className="font-display text-[20px] text-ink mb-2">{s.title}</h3>
+                  <h3 className="font-display text-[20px] text-xg-bordo mb-2">{s.title}</h3>
                   <p className="text-[15px] text-ink-soft leading-relaxed">{s.body}</p>
                 </li>
               ))}
@@ -203,7 +203,7 @@ export default function HomePage() {
           <div className="grid gap-10 md:grid-cols-12">
             <div className="md:col-span-4">
               <Eyebrow>Verticals</Eyebrow>
-              <h2 className="mt-5 font-display text-[28px] sm:text-[36px] leading-[1.1] text-ink mb-4">
+              <h2 className="mt-5 font-display text-[28px] sm:text-[36px] leading-[1.1] text-xg-bordo mb-4">
                 Vertical-specific programs that actually work.
               </h2>
               <p className="text-[15px] text-ink-soft leading-relaxed mb-8">
@@ -217,7 +217,7 @@ export default function HomePage() {
                   <div className="inline-flex h-9 w-9 items-center justify-center rounded-sm bg-emerald-soft">
                     <i.icon className="h-4 w-4 text-emerald-deep" />
                   </div>
-                  <p className="font-display text-[17px] text-ink">{i.label}</p>
+                  <p className="font-display text-[17px] text-xg-bordo">{i.label}</p>
                 </div>
               ))}
             </div>
@@ -229,7 +229,7 @@ export default function HomePage() {
       <section className="border-b border-hairline bg-paper-soft">
         <div className="mx-auto max-w-[1100px] px-6 sm:px-10 py-16 sm:py-24">
           <Eyebrow>Why us</Eyebrow>
-          <h2 className="mt-5 font-display text-[32px] sm:text-[44px] leading-[1.05] text-ink mb-12">
+          <h2 className="mt-5 font-display text-[32px] sm:text-[44px] leading-[1.05] text-xg-bordo mb-12">
             Doing it yourself vs. Xperigift.
           </h2>
           <div className="grid sm:grid-cols-2 border border-hairline divide-y sm:divide-y-0 sm:divide-x divide-hairline">
@@ -249,7 +249,7 @@ export default function HomePage() {
               ))}
             </div>
             <div className="p-7 sm:p-8 bg-paper space-y-4">
-              <p className="text-[11px] uppercase tracking-[0.15em] text-emerald-deep mb-5">Xperigift</p>
+              <p className="text-[11px] uppercase tracking-[0.15em] text-xg-teal mb-5">Xperigift</p>
               {[
                 'Year-round calendar built to your business cycle',
                 'Automated re-engagement for buyers and recipients',
@@ -258,7 +258,7 @@ export default function HomePage() {
                 'Clear revenue targets you can hold us to',
               ].map((t) => (
                 <div key={t} className="flex gap-3 items-start text-[15px] text-ink">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 text-emerald shrink-0" />
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 text-xg-sage shrink-0" />
                   <span>{t}</span>
                 </div>
               ))}
@@ -271,7 +271,7 @@ export default function HomePage() {
       <section className="border-b border-hairline">
         <div className="mx-auto max-w-[760px] px-6 sm:px-10 py-16 sm:py-24">
           <Eyebrow>FAQ</Eyebrow>
-          <h2 className="mt-5 font-display text-[32px] sm:text-[40px] leading-[1.05] text-ink mb-10">
+          <h2 className="mt-5 font-display text-[32px] sm:text-[40px] leading-[1.05] text-xg-bordo mb-10">
             Common questions.
           </h2>
           <div className="divide-y divide-hairline border-y border-hairline">
@@ -298,7 +298,7 @@ export default function HomePage() {
             Thirty minutes. No pitch. Two to three specific revenue opportunities you can act on immediately.
           </p>
           <div className="mt-9 flex flex-wrap gap-3 justify-center">
-            <CTALink to="https://calendly.com/isabel-thegiftcardcafe/30min" size="lg" className="bg-emerald hover:bg-emerald-deep text-paper">
+            <CTALink to="https://calendly.com/isabel-thegiftcardcafe/30min" size="lg" className="bg-xg-terracotta hover:bg-xg-terracotta-dark text-white">
               Book your free audit
             </CTALink>
           </div>

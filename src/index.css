@@ -12,12 +12,32 @@
   --color-hairline: oklch(0.91 0.005 270);
   --color-hairline-strong: oklch(0.83 0.005 270);
   --font-display: "Fraunces", Georgia, serif;
+  /* Xperigift brand */
+  --color-xg-bordo: #4A1028;
+  --color-xg-terracotta: #E8813A;
+  --color-xg-terracotta-dark: #c96025;
+  --color-xg-cream: #F5F2E8;
+  --color-xg-teal: #5ABA80;
+  --color-xg-teal-dark: #3e9b65;
+  --color-xg-sage: #8ABB7A;
+  --color-xg-highlight: #B8D9C8;
+  --color-xg-highlight-text: #285342;
 }
 
 @layer base {
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
+    /* Xperigift brand scale */
+    --xg-bordo-700: #4A1028;
+    --xg-terracotta-500: #E8813A;
+    --xg-terracotta-600: #c96025;
+    --xg-cream-50: #F5F2E8;
+    --xg-teal-400: #5ABA80;
+    --xg-teal-500: #3e9b65;
+    --xg-sage-400: #8ABB7A;
+    --xg-highlight-200: #B8D9C8;
+    --xg-highlight-700: #285342;
     --paper: oklch(0.985 0.005 85);
     --paper-soft: oklch(0.97 0.006 85);
     --ink: oklch(0.18 0.01 270);
