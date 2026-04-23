@@ -76,8 +76,8 @@ export default function HomePage() {
       </section>
 
       {/* ── Marquee strip ── */}
-      <div className="border-b border-hairline bg-paper-soft overflow-hidden">
-        <div className="flex gap-10 px-6 sm:px-10 py-4 text-[11px] uppercase tracking-[0.18em] text-ink-muted whitespace-nowrap">
+      <div className="border-b border-hairline bg-xg-bordo overflow-hidden">
+        <div className="flex gap-10 px-6 sm:px-10 py-4 text-[11px] uppercase tracking-[0.18em] text-xg-cream whitespace-nowrap">
           {['Built for operators', 'No platform to learn', 'Year-round revenue', 'Done with you', 'US SMBs only', '90-day cycles', 'Pre-paid revenue', 'Free audit to start'].map((t, i) => (
             <span key={i}>{t}</span>
           ))}
@@ -116,7 +116,7 @@ export default function HomePage() {
           <div className="grid sm:grid-cols-2 border border-hairline divide-y sm:divide-y-0 divide-hairline">
             <div className="grid divide-y divide-hairline">
               {PILLARS.slice(0, 2).map((p) => (
-                <div key={p.title} className="p-7 sm:p-8 bg-paper">
+                <div key={p.title} className="p-7 sm:p-8 bg-xg-cream">
                   <p.icon className="h-5 w-5 text-emerald mb-4" />
                   <h3 className="font-display text-[20px] text-xg-bordo mb-2">{p.title}</h3>
                   <p className="text-[15px] text-ink-soft leading-relaxed">{p.body}</p>
@@ -125,7 +125,7 @@ export default function HomePage() {
             </div>
             <div className="grid divide-y divide-hairline border-t sm:border-t-0 sm:border-l border-hairline">
               {PILLARS.slice(2).map((p) => (
-                <div key={p.title} className="p-7 sm:p-8 bg-paper">
+                <div key={p.title} className="p-7 sm:p-8 bg-xg-cream">
                   <p.icon className="h-5 w-5 text-emerald mb-4" />
                   <h3 className="font-display text-[20px] text-xg-bordo mb-2">{p.title}</h3>
                   <p className="text-[15px] text-ink-soft leading-relaxed">{p.body}</p>
@@ -189,7 +189,7 @@ export default function HomePage() {
               { value: '$0', label: 'Cost to start — the audit is free' },
             ].map((s) => (
               <div key={s.label}>
-                <p className="font-display text-[44px] sm:text-[52px] leading-none text-paper">{s.value}</p>
+                <p className="font-display text-[44px] sm:text-[52px] leading-none text-xg-terracotta">{s.value}</p>
                 <p className="mt-3 text-[13px] text-paper/50 uppercase tracking-widest leading-relaxed">{s.label}</p>
               </div>
             ))}

@@ -9,7 +9,7 @@ export function CTALink({ to, children, size = 'md', variant = 'solid', withArro
   };
   const variants = {
     solid: 'bg-xg-terracotta text-white hover:bg-xg-terracotta-dark',
-    outline: 'border border-xg-teal text-xg-teal hover:border-xg-teal-dark hover:text-xg-teal-dark',
+    outline: 'border border-xg-teal-dark text-xg-teal-dark hover:border-xg-teal hover:text-xg-teal',
     ghost: 'text-ink-soft hover:text-ink',
   };
 
