@@ -104,7 +104,7 @@ export default function PortalApp() {
         {page === 'customers' && <CustomersPage clientId={clientId} toast={toast} />}
         {page === 'emails' && <EmailsPage clientId={clientId} toast={toast} />}
         {page === 'templates' && <TemplatesPage />}
-        {page === 'admin-clients' && <AdminClientsPage />}
+        {page === 'admin-clients' && <AdminClientsPage toast={toast} />}
         {page === 'admin-bookings' && <AdminBookingsPage />}
       </DashLayout>
       {toasts.map((t) => <Toast key={t.id} msg={t.msg} kind={t.kind} onDone={() => removeToast(t.id)} />)}
