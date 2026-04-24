@@ -17,6 +17,7 @@ import EmailsPage from './pages/EmailsPage';
 import TemplatesPage from './pages/TemplatesPage';
 import AdminClientsPage from './pages/AdminClientsPage';
 import AdminBookingsPage from './pages/AdminBookingsPage';
+import AdminDashboardPage from './pages/AdminDashboardPage';
 
 import { ink, paper } from './lib/tokens';
 
@@ -104,6 +105,7 @@ export default function PortalApp() {
         {page === 'customers' && <CustomersPage clientId={clientId} toast={toast} />}
         {page === 'emails' && <EmailsPage clientId={clientId} toast={toast} />}
         {page === 'templates' && <TemplatesPage />}
+        {page === 'admin-dashboard' && <AdminDashboardPage setPage={setPage} setClientId={setClientId} />}
         {page === 'admin-clients' && <AdminClientsPage toast={toast} />}
         {page === 'admin-bookings' && <AdminBookingsPage />}
       </DashLayout>

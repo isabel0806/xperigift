@@ -17,6 +17,7 @@ const NAV_STAFF = [
 ];
 
 const NAV_ADMIN = [
+  { id: 'admin-dashboard', label: 'Dashboard', icon: 'grid' },
   { id: 'admin-clients', label: 'Clients', icon: 'building' },
   { id: 'admin-bookings', label: 'Audit bookings', icon: 'settings' },
 ];
