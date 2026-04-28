@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { SiteShell } from '../../components/landing/SiteShell';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, Download } from 'lucide-react';
 
 export default function ThankYouPage() {
   useEffect(() => {
@@ -22,12 +22,22 @@ export default function ThankYouPage() {
           <p className="mt-6 max-w-[440px] mx-auto text-[16px] text-ink-soft leading-relaxed">
             Check your email for the calendar invite. We'll come prepared with specifics for your program — no generic pitch.
           </p>
-          <Link
-            to="/"
-            className="mt-10 inline-flex h-10 items-center rounded-sm border border-xg-teal-dark text-xg-teal-dark hover:border-xg-teal hover:text-xg-teal px-5 text-[14px] font-medium transition-colors"
-          >
-            Back to home
-          </Link>
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <a
+              href="/Client Success Playbook 2026.pdf"
+              download="Gift Card Revenue Report — Xperigift.pdf"
+              className="inline-flex h-11 items-center gap-2 rounded-sm bg-xg-bordo text-white hover:opacity-90 px-6 text-[14px] font-medium transition-opacity"
+            >
+              <Download className="h-4 w-4" />
+              Download the Revenue Gap Report
+            </a>
+            <Link
+              to="/"
+              className="inline-flex h-11 items-center rounded-sm border border-xg-teal-dark text-xg-teal-dark hover:border-xg-teal hover:text-xg-teal px-5 text-[14px] font-medium transition-colors"
+            >
+              Back to home
+            </Link>
+          </div>
         </div>
       </section>
     </SiteShell>
