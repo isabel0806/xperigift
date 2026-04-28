@@ -24,8 +24,8 @@ export default function ThankYouPage() {
           </p>
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
             <a
-              href="/Client Success Playbook 2026.pdf"
-              download="Gift Card Revenue Report — Xperigift.pdf"
+              href="/Xperigift_Client_Success_Playbook_2026.pdf"
+              download="Xperigift_Client_Success_Playbook_2026.pdf"
               className="inline-flex h-11 items-center gap-2 rounded-sm bg-xg-bordo text-white hover:opacity-90 px-6 text-[14px] font-medium transition-opacity"
             >
               <Download className="h-4 w-4" />
