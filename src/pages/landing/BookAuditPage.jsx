@@ -134,10 +134,10 @@ export default function BookAuditPage() {
                 <div>
                   <label className="block text-[13px] font-medium text-ink mb-1.5">Business website</label>
                   <input
-                    type="url"
+                    type="text"
                     value={form.business_website}
                     onChange={(e) => set('business_website', e.target.value)}
-                    placeholder="https://yourbusiness.com"
+                    placeholder="yourbusiness.com"
                     className="w-full h-11 px-4 border border-hairline-strong rounded-sm text-[14px] text-ink bg-white focus:outline-none focus:ring-2 focus:ring-xg-bordo/30 focus:border-xg-bordo transition-colors"
                   />
                 </div>
