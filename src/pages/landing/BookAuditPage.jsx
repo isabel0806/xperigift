@@ -8,7 +8,7 @@ export default function BookAuditPage() {
   const navigate = useNavigate();
   const [step, setStep] = useState('form'); // 'form' | 'calendly'
   const [leadId, setLeadId] = useState(null);
-  const [form, setForm] = useState({ name: '', email: '', business_website: '' });
+  const [form, setForm] = useState({ name: '', email: '', phone: '', business_website: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -54,6 +54,7 @@ export default function BookAuditPage() {
       .insert({
         name: form.name.trim(),
         email: form.email.trim().toLowerCase(),
+        phone: form.phone.trim() || null,
         business_website: form.business_website.trim() || null,
       })
       .select('id')
@@ -117,6 +118,16 @@ export default function BookAuditPage() {
                     onChange={(e) => set('email', e.target.value)}
                     required
                     placeholder="maria@yourbusiness.com"
+                    className="w-full h-11 px-4 border border-hairline-strong rounded-sm text-[14px] text-ink bg-white focus:outline-none focus:ring-2 focus:ring-xg-bordo/30 focus:border-xg-bordo transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[13px] font-medium text-ink mb-1.5">Phone number</label>
+                  <input
+                    type="tel"
+                    value={form.phone}
+                    onChange={(e) => set('phone', e.target.value)}
+                    placeholder="+1 (555) 000-0000"
                     className="w-full h-11 px-4 border border-hairline-strong rounded-sm text-[14px] text-ink bg-white focus:outline-none focus:ring-2 focus:ring-xg-bordo/30 focus:border-xg-bordo transition-colors"
                   />
                 </div>
