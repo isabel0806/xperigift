@@ -297,11 +297,37 @@ function EmailEditor({ email, allTags, customerCount, onBack, onSave, onApprove,
     if (!testEmail.trim()) return;
     setTestSending(true);
     await handleSave();
+
+    const from = (draft.sender_name && draft.sender_email)
+      ? `${draft.sender_name} <${draft.sender_email}>`
+      : 'Xperigift <onboarding@resend.dev>';
+
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${import.meta.env.VITE_RESEND_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from,
+        to: [testEmail.trim().toLowerCase()],
+        subject: `[TEST] ${draft.subject || 'Email preview'}`,
+        html: draft.html_content || '<p>No content yet.</p>',
+      }),
+    });
+
     setTestSending(false);
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      toast(`Failed to send: ${err.message || 'Check your Resend API key'}`, 'error');
+      return;
+    }
+
     setTestOpen(false);
     const addr = testEmail.trim().toLowerCase();
     setTestEmail('');
-    toast(`Test email queued for ${addr}`);
+    toast(`Test email sent to ${addr} ✓`);
   };
 
   return (
