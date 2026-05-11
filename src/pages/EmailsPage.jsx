@@ -297,16 +297,11 @@ function EmailEditor({ email, allTags, customerCount, onBack, onSave, onApprove,
     if (!testEmail.trim()) return;
     setTestSending(true);
     await handleSave();
-    const { error } = await supabase
-      .from('email_campaigns')
-      .update({ test_email_to: testEmail.trim().toLowerCase() })
-      .eq('id', draft.id);
     setTestSending(false);
-    if (error) { toast('Failed to queue test email', 'error'); return; }
-    setDraft((p) => ({ ...p, test_email_to: testEmail.trim().toLowerCase() }));
     setTestOpen(false);
+    const addr = testEmail.trim().toLowerCase();
     setTestEmail('');
-    toast('Test email queued — we\'ll send it shortly');
+    toast(`Test email queued for ${addr}`);
   };
 
   return (
