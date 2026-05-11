@@ -302,19 +302,34 @@ function EmailEditor({ email, allTags, customerCount, onBack, onSave, onApprove,
       ? `${draft.sender_name} <${draft.sender_email}>`
       : 'Xperigift <onboarding@resend.dev>';
 
-    const { error } = await supabase.functions.invoke('send-email', {
-      body: {
-        from,
-        to: [testEmail.trim().toLowerCase()],
-        subject: `[TEST] ${draft.subject || 'Email preview'}`,
-        html: draft.html_content || '<p>No content yet.</p>',
-      },
-    });
+    const fnUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-email`;
+    let res;
+    try {
+      res = await fetch(fnUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
+        },
+        body: JSON.stringify({
+          from,
+          to: [testEmail.trim().toLowerCase()],
+          subject: `[TEST] ${draft.subject || 'Email preview'}`,
+          html: draft.html_content || '<p>No content yet.</p>',
+        }),
+      });
+    } catch (e) {
+      setTestSending(false);
+      toast(`Network error: ${e.message}`, 'error');
+      return;
+    }
 
     setTestSending(false);
 
-    if (error) {
-      toast(`Failed to send: ${error.message || 'Check Edge Function logs'}`, 'error');
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      toast(`Failed to send (${res.status}): ${body.error || body.message || 'Check Edge Function logs'}`, 'error');
       return;
     }
 
