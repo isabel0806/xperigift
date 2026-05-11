@@ -12,6 +12,7 @@ export default function EmailsPage({ clientId, toast }) {
   const [loading, setLoading] = useState(true);
   const [customers, setCustomers] = useState([]);
   const [selected, setSelected] = useState(null);
+  const [showNew, setShowNew] = useState(false);
 
   useEffect(() => {
     if (!clientId) return;
@@ -49,6 +50,38 @@ export default function EmailsPage({ clientId, toast }) {
     toast('Changes saved');
   };
 
+  const submitForReview = async (id) => {
+    await supabase.from('email_campaigns').update({ status: 'pending_approval' }).eq('id', id);
+    setEmails((p) => p.map((e) => e.id === id ? { ...e, status: 'pending_approval' } : e));
+    toast('Campaign submitted for review');
+    setSelected(null);
+  };
+
+  const handleCreate = async (fields) => {
+    const { data, error } = await supabase
+      .from('email_campaigns')
+      .insert({ ...fields, client_id: clientId, status: 'draft' })
+      .select()
+      .single();
+    if (error) { toast('Failed to create campaign', 'error'); return; }
+    setEmails((p) => [data, ...p]);
+    setShowNew(false);
+    setSelected(data.id);
+    toast('Campaign created');
+  };
+
+  if (showNew) {
+    return (
+      <NewCampaignForm
+        allTags={allTags}
+        customerCount={customers.length}
+        onBack={() => setShowNew(false)}
+        onCreate={handleCreate}
+        toast={toast}
+      />
+    );
+  }
+
   if (selected) {
     const email = emails.find((e) => e.id === selected);
     return (
@@ -60,18 +93,20 @@ export default function EmailsPage({ clientId, toast }) {
         onSave={save}
         onApprove={approve}
         onReject={reject}
+        onSubmitForReview={submitForReview}
         toast={toast}
       />
     );
   }
 
   const pending = emails.filter((e) => e.status === 'pending_approval');
+  const drafts = emails.filter((e) => e.status === 'draft');
 
   return (
     <Shell
       title="Emails"
-      subtitle="Review and approve campaigns before they send."
-      actions={<Btn icon="plus" primary onClick={() => toast('New campaign request sent to Xperigift team')}>New campaign</Btn>}
+      subtitle="Create and manage your email campaigns."
+      actions={<Btn icon="plus" primary onClick={() => setShowNew(true)}>New campaign</Btn>}
     >
       {pending.length > 0 && (
         <div style={{ marginBottom: 32 }}>
@@ -98,6 +133,23 @@ export default function EmailsPage({ clientId, toast }) {
         </div>
       )}
 
+      {drafts.length > 0 && (
+        <div style={{ marginBottom: 32 }}>
+          <p style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.14em', color: inkMuted, marginBottom: 12 }}>Drafts</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {drafts.map((e) => (
+              <div key={e.id} style={{ border: `1px solid ${hairline}`, borderRadius: 'var(--r)', background: paper, padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
+                <button onClick={() => setSelected(e.id)} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left', flex: 1, minWidth: 0 }}>
+                  <p style={{ fontWeight: 500, color: ink, fontSize: 14, textDecoration: 'underline', textUnderlineOffset: 3, textDecorationColor: 'var(--hairline-strong)' }}>{e.subject || '(No subject)'}</p>
+                  <p style={{ fontSize: 12, color: inkMuted, marginTop: 3 }}>Draft · Created {fmtDate(e.created_at)}</p>
+                </button>
+                <Btn onClick={() => setSelected(e.id)} icon="edit">Edit</Btn>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <p style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.14em', color: inkMuted, marginBottom: 12 }}>All campaigns</p>
 
       {loading ? (
@@ -107,12 +159,12 @@ export default function EmailsPage({ clientId, toast }) {
           <thead><THead cols={['Subject', 'Segment', 'Send date', 'Status']} /></thead>
           <tbody>
             {emails.map((e) => {
-              const col = { pending_approval: 'oklch(0.42 0.12 70)', approved: emeraldDeep, sent: inkMuted, rejected: 'oklch(0.45 0.18 27)' }[e.status] || inkMuted;
+              const col = { draft: inkMuted, pending_approval: 'oklch(0.42 0.12 70)', approved: emeraldDeep, sent: inkMuted, rejected: 'oklch(0.45 0.18 27)' }[e.status] || inkMuted;
               return (
                 <tr key={e.id} style={{ borderBottom: `1px solid ${hairline}` }}>
                   <td style={{ padding: '12px 16px' }}>
                     <button onClick={() => setSelected(e.id)} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', fontSize: 14, fontWeight: 500, color: ink, textAlign: 'left', textDecoration: 'underline', textUnderlineOffset: 3, textDecorationColor: 'var(--hairline-strong)' }}>
-                      {e.subject}
+                      {e.subject || '(No subject)'}
                     </button>
                   </td>
                   <TD muted>{e.segment_type === 'all' ? 'All contacts' : `Tagged: ${e.segment_tag}`}</TD>
@@ -131,11 +183,102 @@ export default function EmailsPage({ clientId, toast }) {
   );
 }
 
+/* ── NEW CAMPAIGN FORM ─────────────────────────────────────── */
+function NewCampaignForm({ allTags, customerCount, onBack, onCreate, toast }) {
+  const [fields, setFields] = useState({
+    subject: '',
+    sender_name: '',
+    sender_email: '',
+    send_date: '',
+    segment_type: 'all',
+    segment_tag: '',
+    html_content: '',
+  });
+  const [saving, setSaving] = useState(false);
+
+  const update = (patch) => setFields((p) => ({ ...p, ...patch }));
+
+  const handleCreate = async () => {
+    if (!fields.subject.trim()) { toast('Subject is required', 'error'); return; }
+    setSaving(true);
+    await onCreate(fields);
+    setSaving(false);
+  };
+
+  return (
+    <div className="fade-up" style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
+      {/* Top bar */}
+      <div style={{ borderBottom: `1px solid ${hairline}`, background: paper, padding: '0 24px', height: 56, display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0 }}>
+        <button onClick={onBack} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: inkSoft, background: 'none', border: 'none', cursor: 'pointer', padding: 0, flexShrink: 0 }}>
+          <Icon name="arrow-left" size={15} /> Back
+        </button>
+        <div style={{ width: 1, height: 20, background: hairline, flexShrink: 0 }} />
+        <input
+          value={fields.subject}
+          onChange={(e) => update({ subject: e.target.value })}
+          placeholder="Email subject…"
+          autoFocus
+          style={{ flex: 1, fontSize: 15, fontWeight: 500, color: ink, border: 'none', outline: 'none', background: 'transparent', minWidth: 0 }}
+        />
+        <Btn primary onClick={handleCreate} disabled={saving}>
+          {saving ? 'Creating…' : 'Create draft'}
+        </Btn>
+      </div>
+
+      {/* Meta row */}
+      <div style={{ borderBottom: `1px solid ${hairline}`, background: paperSoft, padding: '10px 24px', display: 'flex', alignItems: 'center', gap: 24, flexShrink: 0, flexWrap: 'wrap' }}>
+        <MetaField label="From name">
+          <input value={fields.sender_name} onChange={(e) => update({ sender_name: e.target.value })} placeholder="Your Business"
+            style={{ fontSize: 13, color: ink, border: 'none', borderBottom: `1px solid ${hairlineStrong}`, outline: 'none', background: 'transparent', padding: '1px 0', minWidth: 150 }} />
+        </MetaField>
+        <MetaField label="From email">
+          <input type="email" value={fields.sender_email} onChange={(e) => update({ sender_email: e.target.value })} placeholder="hello@business.com"
+            style={{ fontSize: 13, color: ink, border: 'none', borderBottom: `1px solid ${hairlineStrong}`, outline: 'none', background: 'transparent', padding: '1px 0', minWidth: 180 }} />
+        </MetaField>
+        <MetaField label="Send date">
+          <input type="date" value={fields.send_date} onChange={(e) => update({ send_date: e.target.value })}
+            style={{ fontSize: 13, color: ink, border: 'none', borderBottom: `1px solid ${hairlineStrong}`, outline: 'none', background: 'transparent', padding: '1px 0' }} />
+        </MetaField>
+        <MetaField label="Send to">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <select value={fields.segment_type} onChange={(e) => update({ segment_type: e.target.value, segment_tag: '' })}
+              style={{ fontSize: 13, color: ink, border: 'none', borderBottom: `1px solid ${hairlineStrong}`, outline: 'none', background: 'transparent', cursor: 'pointer' }}>
+              <option value="all">All contacts ({customerCount})</option>
+              <option value="tag">By tag</option>
+            </select>
+            {fields.segment_type === 'tag' && (
+              <select value={fields.segment_tag} onChange={(e) => update({ segment_tag: e.target.value })}
+                style={{ fontSize: 13, color: ink, border: 'none', borderBottom: `1px solid ${hairlineStrong}`, outline: 'none', background: 'transparent', cursor: 'pointer' }}>
+                <option value="">Pick a tag…</option>
+                {allTags.map((t) => <option key={t} value={t}>{t}</option>)}
+              </select>
+            )}
+          </div>
+        </MetaField>
+      </div>
+
+      {/* HTML editor */}
+      <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+        <textarea
+          value={fields.html_content}
+          onChange={(e) => update({ html_content: e.target.value })}
+          placeholder="Paste your email HTML here… (you can also leave this blank and add it later)"
+          spellCheck={false}
+          style={{ flex: 1, padding: 20, fontSize: 13, lineHeight: 1.7, color: ink, background: paper, border: 'none', outline: 'none', resize: 'none', fontFamily: 'ui-monospace, Consolas, monospace' }}
+        />
+      </div>
+    </div>
+  );
+}
+
 /* ── EMAIL EDITOR ──────────────────────────────────────────── */
-function EmailEditor({ email, allTags, customerCount, onBack, onSave, onApprove, onReject, toast }) {
+function EmailEditor({ email, allTags, customerCount, onBack, onSave, onApprove, onReject, onSubmitForReview, toast }) {
   const [draft, setDraft] = useState({ ...email });
   const [previewMode, setPreviewMode] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [testOpen, setTestOpen] = useState(false);
+  const [testEmail, setTestEmail] = useState('');
+  const [testSending, setTestSending] = useState(false);
 
   const update = (patch) => setDraft((p) => ({ ...p, ...patch }));
   const canEdit = draft.status !== 'sent';
@@ -148,6 +291,22 @@ function EmailEditor({ email, allTags, customerCount, onBack, onSave, onApprove,
     setSaving(true);
     await onSave(draft);
     setSaving(false);
+  };
+
+  const handleSendTest = async () => {
+    if (!testEmail.trim()) return;
+    setTestSending(true);
+    await handleSave();
+    const { error } = await supabase
+      .from('email_campaigns')
+      .update({ test_email_to: testEmail.trim().toLowerCase() })
+      .eq('id', draft.id);
+    setTestSending(false);
+    if (error) { toast('Failed to queue test email', 'error'); return; }
+    setDraft((p) => ({ ...p, test_email_to: testEmail.trim().toLowerCase() }));
+    setTestOpen(false);
+    setTestEmail('');
+    toast('Test email queued — we\'ll send it shortly');
   };
 
   return (
@@ -165,8 +324,41 @@ function EmailEditor({ email, allTags, customerCount, onBack, onSave, onApprove,
         ) : (
           <span style={{ flex: 1, fontSize: 15, fontWeight: 500, color: ink, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{draft.subject}</span>
         )}
-        <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
-          {canEdit && <Btn onClick={handleSave} disabled={saving}>{saving ? 'Saving…' : 'Save changes'}</Btn>}
+        <div style={{ display: 'flex', gap: 8, flexShrink: 0, alignItems: 'center', position: 'relative' }}>
+          {canEdit && <Btn onClick={handleSave} disabled={saving}>{saving ? 'Saving…' : 'Save'}</Btn>}
+
+          {/* Send test button + popover */}
+          {canEdit && (
+            <div style={{ position: 'relative' }}>
+              <Btn icon="send" onClick={() => setTestOpen((v) => !v)}>Send test</Btn>
+              {testOpen && (
+                <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: 8, background: paper, border: `1px solid ${hairlineStrong}`, borderRadius: 'var(--r)', padding: 16, width: 280, boxShadow: '0 4px 20px oklch(0 0 0 / 0.12)', zIndex: 100 }}>
+                  <p style={{ fontSize: 12, color: inkMuted, marginBottom: 8 }}>Send test to:</p>
+                  <input
+                    type="email"
+                    value={testEmail}
+                    onChange={(e) => setTestEmail(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSendTest()}
+                    placeholder="test@email.com"
+                    autoFocus
+                    style={{ width: '100%', height: 36, padding: '0 10px', border: `1px solid ${hairlineStrong}`, borderRadius: 'var(--r)', fontSize: 13, color: ink, background: paper, outline: 'none', boxSizing: 'border-box' }}
+                  />
+                  <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
+                    <Btn onClick={() => { setTestOpen(false); setTestEmail(''); }} style={{ flex: 1 }}>Cancel</Btn>
+                    <Btn primary onClick={handleSendTest} disabled={testSending || !testEmail.trim()} style={{ flex: 1 }}>
+                      {testSending ? 'Sending…' : 'Send'}
+                    </Btn>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {draft.status === 'draft' && (
+            <Btn primary onClick={async () => { await handleSave(); onSubmitForReview(draft.id); }}>
+              Submit for review
+            </Btn>
+          )}
           {draft.status === 'pending_approval' && (
             <>
               <Btn onClick={() => onReject(draft.id)}>Return</Btn>
