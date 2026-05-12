@@ -299,7 +299,8 @@ function EmailEditor({ email, allTags, customerCount, onBack, onSave, onApprove,
     await handleSave();
 
     const displayName = draft.sender_name || 'Xperigift';
-    const from = `${displayName} <onboarding@resend.dev>`;
+    const fromEmail = draft.sender_email || 'noreply@thegiftcardcafe.com';
+    const from = `${displayName} <${fromEmail}>`;
 
     const fnUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-email`;
     let res;
