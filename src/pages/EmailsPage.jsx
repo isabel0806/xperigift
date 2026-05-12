@@ -298,9 +298,8 @@ function EmailEditor({ email, allTags, customerCount, onBack, onSave, onApprove,
     setTestSending(true);
     await handleSave();
 
-    const from = (draft.sender_name && draft.sender_email)
-      ? `${draft.sender_name} <${draft.sender_email}>`
-      : 'Xperigift <onboarding@resend.dev>';
+    const displayName = draft.sender_name || 'Xperigift';
+    const from = `${displayName} <onboarding@resend.dev>`;
 
     const fnUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-email`;
     let res;
