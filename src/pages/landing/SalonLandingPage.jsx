@@ -46,7 +46,7 @@ export default function SalonLandingPage() {
 
       {/* Hero + Calendly */}
       <section className="border-b border-hairline">
-        <div className="mx-auto max-w-[1200px] px-6 sm:px-10 pt-16 sm:pt-24 pb-0 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+        <div className="mx-auto max-w-[1200px] px-6 sm:px-10 pt-16 sm:pt-24 pb-16 sm:pb-24 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
 
           {/* Left: hook */}
           <div className="pt-4 pb-10 lg:pb-16">
@@ -76,12 +76,12 @@ export default function SalonLandingPage() {
           </div>
 
           {/* Right: Calendly */}
-          <div className="border-l border-hairline pl-0 lg:pl-10 pb-0">
+          <div className="border-l border-hairline pl-0 lg:pl-10">
             <div
               ref={calendlyRef}
               className="calendly-inline-widget"
               data-url="https://calendly.com/isabel-thegiftcardcafe/new-meeting"
-              style={{ minWidth: '280px', height: '900px' }}
+              style={{ minWidth: '280px', height: '1050px' }}
             />
           </div>
 
