@@ -7,6 +7,9 @@ import AboutPage from './pages/landing/AboutPage';
 import IndustriesPage from './pages/landing/IndustriesPage';
 import BookAuditPage from './pages/landing/BookAuditPage';
 import ThankYouPage from './pages/landing/ThankYouPage';
+import SalonLandingPage from './pages/landing/SalonLandingPage';
+import ClubsLandingPage from './pages/landing/ClubsLandingPage';
+import HospitalityLandingPage from './pages/landing/HospitalityLandingPage';
 
 function PixelPageView() {
   const location = useLocation();
@@ -29,6 +32,9 @@ export default function App() {
         <Route path="/industries" element={<IndustriesPage />} />
         <Route path="/book-audit" element={<BookAuditPage />} />
         <Route path="/thank-you" element={<ThankYouPage />} />
+        <Route path="/salon" element={<SalonLandingPage />} />
+        <Route path="/clubs" element={<ClubsLandingPage />} />
+        <Route path="/hospitality" element={<HospitalityLandingPage />} />
         <Route path="/portal/*" element={<PortalApp />} />
       </Routes>
     </>
