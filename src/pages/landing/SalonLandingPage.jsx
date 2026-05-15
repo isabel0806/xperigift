@@ -2,11 +2,11 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SiteShell } from '../../components/landing/SiteShell';
 import { Eyebrow } from '../../components/landing/Eyebrow';
-import { CheckCircle2, TrendingUp, Calendar, Megaphone } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 
 const STATS = [
-  { value: '$1,750–$5,250', label: 'Average salon earns per year from gift cards' },
-  { value: '$14,000–$21,000', label: 'Top 10% of salons earn per year' },
+  { value: '$2K–$5K', label: 'Average salon earns per year from gift cards' },
+  { value: '$14K–$21K', label: 'Top 10% of salons earn per year' },
   { value: '8–10×', label: 'Cyber Monday revenue lift with the right campaign' },
 ];
 
@@ -39,21 +39,46 @@ export default function SalonLandingPage() {
   return (
     <SiteShell>
 
-      {/* Hero */}
+      {/* Hero + Calendly */}
       <section className="border-b border-hairline">
-        <div className="mx-auto max-w-[1100px] px-6 sm:px-10 pt-20 sm:pt-28 pb-16 sm:pb-24">
-          <div className="max-w-[700px]">
+        <div className="mx-auto max-w-[1200px] px-6 sm:px-10 pt-16 sm:pt-24 pb-0 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+
+          {/* Left: hook */}
+          <div className="pt-4 pb-10 lg:pb-16">
             <Eyebrow>Salons &amp; Beauty</Eyebrow>
-            <h1 className="mt-5 font-display text-[38px] sm:text-[58px] leading-[1.02] text-xg-bordo">
-              Your salon is leaving up to $15,750 a year on the table.
+            <h1 className="mt-5 font-display text-[36px] sm:text-[52px] leading-[1.02] text-xg-bordo">
+              Your salon is leaving up to $16K a year on the table.
             </h1>
-            <p className="mt-6 text-[17px] text-ink-soft leading-relaxed max-w-[560px]">
-              The gap between an average salon gift card program and a top-10% one is $8,750–$15,750 per year. It comes down to one thing: a system.
+            <p className="mt-6 text-[16px] text-ink-soft leading-relaxed">
+              The gap between an average salon gift card program and a top-10% one is $9K–$16K per year. It comes down to one thing: a system.
             </p>
-            <p className="mt-4 text-[15px] text-ink-soft leading-relaxed max-w-[560px]">
-              Book a free 30-minute audit below. You'll leave with two to three specific revenue opportunities — yours to keep, no strings attached.
+            <p className="mt-4 text-[15px] text-ink-soft leading-relaxed">
+              Book a free 30-minute audit. You'll leave with two to three specific revenue opportunities — yours to keep, no strings attached.
             </p>
+
+            <div className="mt-8 space-y-2">
+              {[
+                'No pitch. No deck.',
+                'Two to three specific opportunities for your salon',
+                'Free — no obligation to work together',
+              ].map((t) => (
+                <div key={t} className="flex gap-2 items-center text-[14px] text-ink-soft">
+                  <CheckCircle2 className="h-4 w-4 text-xg-sage shrink-0" />
+                  <span>{t}</span>
+                </div>
+              ))}
+            </div>
           </div>
+
+          {/* Right: Calendly */}
+          <div className="border-l border-hairline pl-0 lg:pl-10 pb-0">
+            <div
+              className="calendly-inline-widget"
+              data-url="https://calendly.com/isabel-thegiftcardcafe/new-meeting"
+              style={{ minWidth: '280px', height: '700px' }}
+            />
+          </div>
+
         </div>
       </section>
 
@@ -126,28 +151,6 @@ export default function SalonLandingPage() {
               ))}
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Calendly */}
-      <section className="border-b border-hairline">
-        <div className="mx-auto max-w-[1100px] px-6 sm:px-10 pt-14 pb-2">
-          <div className="max-w-[640px]">
-            <Eyebrow>Free audit</Eyebrow>
-            <h2 className="mt-5 font-display text-[30px] sm:text-[42px] leading-[1.02] text-xg-bordo">
-              Book your 30-minute audit.
-            </h2>
-            <p className="mt-4 text-[15px] text-ink-soft leading-relaxed">
-              No pitch. No deck. You'll leave with specific gift card revenue opportunities for your salon — yours to keep regardless.
-            </p>
-          </div>
-        </div>
-        <div className="mx-auto max-w-[1100px] px-6 sm:px-10 py-8">
-          <div
-            className="calendly-inline-widget"
-            data-url="https://calendly.com/isabel-thegiftcardcafe/new-meeting"
-            style={{ minWidth: '320px', height: '700px' }}
-          />
         </div>
       </section>
 

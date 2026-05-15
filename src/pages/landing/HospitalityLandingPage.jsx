@@ -5,9 +5,9 @@ import { Eyebrow } from '../../components/landing/Eyebrow';
 import { CheckCircle2 } from 'lucide-react';
 
 const STATS = [
-  { value: '$7,500–$15,000', label: 'Average property earns per year from gift cards' },
-  { value: '$37,500–$60,000', label: 'Top 10% of properties earn per year' },
-  { value: '$126,162', label: 'Top 10% of inns and B&Bs earn per year' },
+  { value: '$8K–$15K', label: 'Average property earns per year from gift cards' },
+  { value: '$38K–$60K', label: 'Top 10% of properties earn per year' },
+  { value: '$126K', label: 'Top 10% of inns and B&Bs earn per year' },
 ];
 
 const PROOF = [
@@ -39,21 +39,46 @@ export default function HospitalityLandingPage() {
   return (
     <SiteShell>
 
-      {/* Hero */}
+      {/* Hero + Calendly */}
       <section className="border-b border-hairline">
-        <div className="mx-auto max-w-[1100px] px-6 sm:px-10 pt-20 sm:pt-28 pb-16 sm:pb-24">
-          <div className="max-w-[700px]">
+        <div className="mx-auto max-w-[1200px] px-6 sm:px-10 pt-16 sm:pt-24 pb-0 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+
+          {/* Left: hook */}
+          <div className="pt-4 pb-10 lg:pb-16">
             <Eyebrow>Boutique Hotels &amp; B&amp;Bs</Eyebrow>
-            <h1 className="mt-5 font-display text-[38px] sm:text-[58px] leading-[1.02] text-xg-bordo">
-              Your property is leaving up to $45,000 in gift card revenue behind.
+            <h1 className="mt-5 font-display text-[36px] sm:text-[52px] leading-[1.02] text-xg-bordo">
+              Your property is leaving up to $45K in gift card revenue behind.
             </h1>
-            <p className="mt-6 text-[17px] text-ink-soft leading-relaxed max-w-[560px]">
-              The gap between an average hospitality gift card program and a top-10% one is $22,500–$45,000 per year. Top inns and B&Bs earn $126,162. The difference is a system, not a platform.
+            <p className="mt-6 text-[16px] text-ink-soft leading-relaxed">
+              The gap between an average hospitality program and a top-10% one is $23K–$45K per year. Top inns and B&Bs earn $126K. The difference is a system, not a platform.
             </p>
-            <p className="mt-4 text-[15px] text-ink-soft leading-relaxed max-w-[560px]">
-              Book a free 30-minute audit below. You'll leave with two to three specific revenue opportunities — yours to keep, no strings attached.
+            <p className="mt-4 text-[15px] text-ink-soft leading-relaxed">
+              Book a free 30-minute audit. You'll leave with two to three specific revenue opportunities — yours to keep, no strings attached.
             </p>
+
+            <div className="mt-8 space-y-2">
+              {[
+                'No pitch. No deck.',
+                'Two to three specific opportunities for your property',
+                'Free — no obligation to work together',
+              ].map((t) => (
+                <div key={t} className="flex gap-2 items-center text-[14px] text-ink-soft">
+                  <CheckCircle2 className="h-4 w-4 text-xg-sage shrink-0" />
+                  <span>{t}</span>
+                </div>
+              ))}
+            </div>
           </div>
+
+          {/* Right: Calendly */}
+          <div className="border-l border-hairline pl-0 lg:pl-10 pb-0">
+            <div
+              className="calendly-inline-widget"
+              data-url="https://calendly.com/isabel-thegiftcardcafe/new-meeting"
+              style={{ minWidth: '280px', height: '700px' }}
+            />
+          </div>
+
         </div>
       </section>
 
@@ -126,28 +151,6 @@ export default function HospitalityLandingPage() {
               ))}
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Calendly */}
-      <section className="border-b border-hairline">
-        <div className="mx-auto max-w-[1100px] px-6 sm:px-10 pt-14 pb-2">
-          <div className="max-w-[640px]">
-            <Eyebrow>Free audit</Eyebrow>
-            <h2 className="mt-5 font-display text-[30px] sm:text-[42px] leading-[1.02] text-xg-bordo">
-              Book your 30-minute audit.
-            </h2>
-            <p className="mt-4 text-[15px] text-ink-soft leading-relaxed">
-              No pitch. No deck. You'll leave with specific gift card revenue opportunities for your property — yours to keep regardless.
-            </p>
-          </div>
-        </div>
-        <div className="mx-auto max-w-[1100px] px-6 sm:px-10 py-8">
-          <div
-            className="calendly-inline-widget"
-            data-url="https://calendly.com/isabel-thegiftcardcafe/new-meeting"
-            style={{ minWidth: '320px', height: '700px' }}
-          />
         </div>
       </section>
 
