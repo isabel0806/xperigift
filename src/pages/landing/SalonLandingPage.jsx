@@ -89,13 +89,13 @@ export default function SalonLandingPage() {
       </section>
 
       {/* Stats */}
-      <section className="bg-ink text-paper border-b border-hairline">
+      <section className="bg-paper-soft border-b border-hairline">
         <div className="mx-auto max-w-[1100px] px-6 sm:px-10 py-14 sm:py-20">
-          <div className="grid gap-10 sm:grid-cols-3 border-t border-paper/10 pt-10">
+          <div className="grid gap-10 sm:grid-cols-3 border-t border-hairline pt-10">
             {STATS.map((s) => (
               <div key={s.label}>
                 <p className="font-display text-[36px] sm:text-[44px] leading-none text-xg-terracotta">{s.value}</p>
-                <p className="mt-3 text-[13px] text-paper/50 uppercase tracking-widest leading-relaxed">{s.label}</p>
+                <p className="mt-3 text-[13px] text-ink-muted uppercase tracking-widest leading-relaxed">{s.label}</p>
               </div>
             ))}
           </div>
