@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SiteShell } from '../../components/landing/SiteShell';
 import { Eyebrow } from '../../components/landing/Eyebrow';
@@ -18,6 +18,7 @@ const PROOF = [
 
 export default function SalonLandingPage() {
   const navigate = useNavigate();
+  const calendlyRef = useRef(null);
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -29,8 +30,12 @@ export default function SalonLandingPage() {
 
   useEffect(() => {
     const handleMessage = (e) => {
-      if (e.data?.event !== 'calendly.event_scheduled') return;
-      navigate('/thank-you');
+      if (e.data?.event === 'calendly.event_scheduled') {
+        navigate('/thank-you');
+      }
+      if (e.data?.event === 'calendly.page_height' && calendlyRef.current) {
+        calendlyRef.current.style.height = e.data.payload.height;
+      }
     };
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
@@ -73,9 +78,10 @@ export default function SalonLandingPage() {
           {/* Right: Calendly */}
           <div className="border-l border-hairline pl-0 lg:pl-10 pb-0">
             <div
+              ref={calendlyRef}
               className="calendly-inline-widget"
               data-url="https://calendly.com/isabel-thegiftcardcafe/new-meeting"
-              style={{ minWidth: '280px', height: '700px' }}
+              style={{ minWidth: '280px', height: '900px' }}
             />
           </div>
 
