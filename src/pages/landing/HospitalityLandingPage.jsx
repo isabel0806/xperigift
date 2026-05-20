@@ -29,8 +29,18 @@ export default function HospitalityLandingPage() {
   }, []);
 
   useEffect(() => {
+    if (typeof window.fbq === 'function') {
+      window.fbq('init', '1138944872632311');
+      window.fbq('trackSingle', '1138944872632311', 'PageView');
+    }
+  }, []);
+
+  useEffect(() => {
     const handleMessage = (e) => {
       if (e.data?.event === 'calendly.event_scheduled') {
+        if (typeof window.fbq === 'function') {
+          window.fbq('trackSingle', '1138944872632311', 'Contact');
+        }
         navigate('/thank-you');
       }
       if (e.data?.event === 'calendly.page_height' && calendlyRef.current) {
