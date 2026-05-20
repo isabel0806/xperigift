@@ -29,8 +29,18 @@ export default function ClubsLandingPage() {
   }, []);
 
   useEffect(() => {
+    if (typeof window.fbq === 'function') {
+      window.fbq('init', '1013074627724899');
+      window.fbq('trackSingle', '1013074627724899', 'PageView');
+    }
+  }, []);
+
+  useEffect(() => {
     const handleMessage = (e) => {
       if (e.data?.event === 'calendly.event_scheduled') {
+        if (typeof window.fbq === 'function') {
+          window.fbq('trackSingle', '1013074627724899', 'Contact');
+        }
         navigate('/thank-you');
       }
       if (e.data?.event === 'calendly.page_height' && calendlyRef.current) {
