@@ -29,8 +29,18 @@ export default function SalonLandingPage() {
   }, []);
 
   useEffect(() => {
+    if (typeof window.fbq === 'function') {
+      window.fbq('init', '1484357613387937');
+      window.fbq('trackSingle', '1484357613387937', 'PageView');
+    }
+  }, []);
+
+  useEffect(() => {
     const handleMessage = (e) => {
       if (e.data?.event === 'calendly.event_scheduled') {
+        if (typeof window.fbq === 'function') {
+          window.fbq('trackSingle', '1484357613387937', 'Contact');
+        }
         navigate('/thank-you');
       }
       if (e.data?.event === 'calendly.page_height' && calendlyRef.current) {
